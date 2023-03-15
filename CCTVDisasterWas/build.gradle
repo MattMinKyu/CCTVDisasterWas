@@ -1,0 +1,48 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.4'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+bootJar{
+    archivesBaseName = 'cctvdisastersystem'
+    archiveFileName = 'ytncctvdisaster.jar'
+    archiveVersion = "0.0.1"
+}
+
+group = 'com.ytn.cctvdisaster.project'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.3'
+    implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4.1:1.16'
+    implementation 'com.google.code.gson:gson:2.8.6'
+	implementation group: 'com.oracle.ojdbc', name: 'orai18n', version: '19.3.0.0'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.amqp:spring-rabbit-test'
+
+    //�쇅遺� 釉뚮줈而ㅻ�� �궗�슜�븯湲� �쐞�빐
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-reactor-netty
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-reactor-netty', version: '2.4.6'
+
+    //jackson2json�뿉�꽌 LocalDateTime�쓣 handling �븯湲� �쐞�빐
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.4'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
