@@ -4,10 +4,6 @@
 	
 	<select id="selectCaptionsInfoListCnt" parameterType="com.ytn.cctvdisaster.project.vo.PageingVo" resultType="Integer">
 		SELECT COUNT(*) FROM YTNDI.CAPTION_DETAIL
-		    WHERE CAPTION_IDX BETWEEN #{strDate} AND #{endDate}
-		    <if test='searchText != null and searchText != ""'>
-			    AND UPPER(context) LIKE UPPER('%' || #{searchText} || '%')
-			</if>
 	</select>
 
 </mapper>
