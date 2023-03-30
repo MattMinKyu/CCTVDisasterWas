@@ -46,6 +46,9 @@ dependencies {
     //jackson2json�뿉�꽌 LocalDateTime�쓣 handling �븯湲� �쐞�빐
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.12.4'
+    
+    // https://mvnrepository.com/artifact/net.bramp.ffmpeg/ffmpeg
+	implementation group: 'net.bramp.ffmpeg', name: 'ffmpeg', version: '0.7.0'
 
 }
 

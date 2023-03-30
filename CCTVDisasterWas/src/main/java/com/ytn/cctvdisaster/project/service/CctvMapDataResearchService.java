@@ -1,5 +1,8 @@
 package com.ytn.cctvdisaster.project.service;
 
+import java.util.List;
+
+import com.ytn.cctvdisaster.project.dto.CctvMapResearchDto;
 import com.ytn.cctvdisaster.project.vo.NaverMapLocalResearchVo;
 
 /**
@@ -11,12 +14,21 @@ import com.ytn.cctvdisaster.project.vo.NaverMapLocalResearchVo;
 public interface CctvMapDataResearchService {
 	
 	/**
-	 * Naver Map Data By Local Research.
+	 * getLocalListByNaverMapDataJson
 	 * 
 	 * @author mattmk
-	 * @param NaverMapLocalResearchResultVo naverMapLocalResearchVo
+	 * @param searchLocalName
 	 * @return String
 	 */
 	public String getLocalListByNaverMapDataJson(NaverMapLocalResearchVo naverMapLocalResearchVo);
+	
+	/**
+	 * getCctvListByMapDataJson
+	 * 
+	 * @author mattmk
+	 * @param cctvMapResearchDto
+	 * @return String
+	 */
+	public String getCctvListByLocalMapDataJson(CctvMapResearchDto cctvMapResearchDto, List<String> testCctvId);
 	
 }

@@ -3,7 +3,7 @@
 <mapper namespace="com.ytn.cctvdisaster.project.dao.CaptionsDataDao">
 	
 	<select id="selectCaptionsInfoListCnt" parameterType="com.ytn.cctvdisaster.project.vo.PageingVo" resultType="Integer">
-		SELECT COUNT(*) FROM YTNDI.CAPTION_DETAIL
+		SELECT COUNT(*) FROM YTNDI.공공_대기예보
 	</select>
 
 </mapper>

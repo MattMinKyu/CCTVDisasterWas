@@ -2,18 +2,26 @@ package com.ytn.cctvdisaster.project.serviceImpl;
 
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ytn.cctvdisaster.project.dto.CctvMapResearchDto;
+import com.ytn.cctvdisaster.project.result.vo.CctvMapResearchResultVo;
+import com.ytn.cctvdisaster.project.result.vo.KtictCctvStatusResultVo;
 import com.ytn.cctvdisaster.project.result.vo.NaverMapLocalResearchResultVo;
+import com.ytn.cctvdisaster.project.service.CctvKtIctVideoInfoDataService;
 import com.ytn.cctvdisaster.project.service.CctvMapDataResearchService;
 import com.ytn.cctvdisaster.project.vo.NaverMapLocalResearchVo;
 
@@ -22,13 +30,24 @@ public class CctvMapDataResearchServiceImpl implements CctvMapDataResearchServic
 	
 	private static final Logger logger = LoggerFactory.getLogger(CctvMapDataResearchServiceImpl.class);
 	
-	/*
-	private CaptionsDataDao captionsDataDao;
+	private CctvKtIctVideoInfoDataService cctvKtIctVideoInfoDataService;
 	
-	public CctvMapDataResearchServiceImpl(CaptionsDataDao captionsDataDao) {
-		this.captionsDataDao = captionsDataDao;
+	@Value("${naver.map.api.uri}")
+    private String naverMapApiUrl;
+	
+	@Value("${naver.map.api.path}")
+    private String naverMapApiPath;
+	
+	@Value("${naver.map.api.clientid}")
+    private String naverMapApiClientId;
+	
+	@Value("${naver.map.api.secret}")
+    private String naverMapApiSecret;
+	
+	
+	public CctvMapDataResearchServiceImpl(CctvKtIctVideoInfoDataService cctvKtIctVideoInfoDataService) {
+		this.cctvKtIctVideoInfoDataService = cctvKtIctVideoInfoDataService;
 	}
-	*/
 	
 	@Override
 	public String getLocalListByNaverMapDataJson(NaverMapLocalResearchVo naverMapLocalResearchVo) {
@@ -38,22 +57,22 @@ public class CctvMapDataResearchServiceImpl implements CctvMapDataResearchServic
 		ObjectMapper mapper = new ObjectMapper();
 		
 		URI uri = UriComponentsBuilder
-	                .fromUriString("https://openapi.naver.com")
-	                .path("/v1/search/local.json")
+	                .fromUriString(naverMapApiUrl)
+	                .path(naverMapApiPath)
 	                .queryParam("query", naverMapLocalResearchVo.getQuery())
 	                .queryParam("display", naverMapLocalResearchVo.getDisplay())
 	                .queryParam("start", naverMapLocalResearchVo.getStart())
 	                .queryParam("sort", naverMapLocalResearchVo.getSort())
-	                // UTF-8∑Œ ¿Œƒ⁄µ˘
+	                // UTF-8Ïù∏ÏΩîÎî©.
 	                .encode(Charset.forName("UTF-8"))
 	                .build()
 	                .toUri();
 
-	    // header ∞™ √ﬂ∞° get¿∏∑Œ ø‰√ª«œ±‚ ∂ßπÆø° Void∑Œ πﬁ¥¬¥Ÿ.
+	    // header ÔøΩÔøΩ ÔøΩﬂ∞ÔøΩ getÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩ√ªÔøΩœ±ÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ VoidÔøΩÔøΩ ÔøΩﬁ¥¬¥ÔøΩ.
 	    RequestEntity<Void> req = RequestEntity
 	            .get(uri)
-	            .header("X-Naver-Client-Id","Uu42wShv9vuD7g4y1GIi")
-	            .header("X-Naver-Client-Secret", "a7BmKltapZ")
+	            .header("X-Naver-Client-Id",naverMapApiClientId)
+	            .header("X-Naver-Client-Secret",naverMapApiSecret)
 	            .build();
 
 	    ResponseEntity<NaverMapLocalResearchResultVo> response = restTemplate.exchange(req, NaverMapLocalResearchResultVo.class);
@@ -69,6 +88,83 @@ public class CctvMapDataResearchServiceImpl implements CctvMapDataResearchServic
 		return resultJsonData;
 	}
 	
-	
+	@SuppressWarnings({ "deprecation", "unused" })
+	@Override
+	public String getCctvListByLocalMapDataJson(CctvMapResearchDto cctvMapResearchDto, List<String> testCctvId) {
+		
+		logger.info("[CctvMapDataResearchServiceImpl] [getCctvListByLocalMapDataJson] Start ~!!!! ");
+		
+		String resultJsonData = "";
+		List<CctvMapResearchResultVo> cctvMapResearchResultVoList = new ArrayList<CctvMapResearchResultVo>();
+		
+		/*
+		 * TODO DB Ïó∞Îèô Ìï¥ÏÑú Î∂ÑÍ∏∞ÌïòÍ∏∞
+		 * 
+		 * KT ICT CCTV, ÏÇ∞Î¶ºÏ≤≠
+		 */
+		String testTypeStr = "ktict";
+		
+		if(testTypeStr.equals("ktict")) {
+			List<KtictCctvStatusResultVo> ktictCctvStatusResultVoList = new ArrayList<KtictCctvStatusResultVo>();
+			StringBuilder cctvIdStrBuild = new StringBuilder();
+			String cctvIdAllStr = "";
+			
+			for(int i=0;i<testCctvId.size();i++) {
+				if(i!=0) {
+					cctvIdStrBuild.append(",");
+				}
+				cctvIdStrBuild.append(testCctvId.get(i));
+			}
+			
+			cctvIdAllStr = cctvIdStrBuild.toString();
+			
+			// CCTV STATUS Get
+			ktictCctvStatusResultVoList = cctvKtIctVideoInfoDataService.getCctvStatusInfoListByKtIctDataJson(cctvIdStrBuild.toString());
+			
+			//0Ïù¥Î©¥, return.
+			if(ktictCctvStatusResultVoList.size() == 0) {
+				return resultJsonData;
+			}
+			
+			for(KtictCctvStatusResultVo ktictCctvStatusResultVo:ktictCctvStatusResultVoList) {
+				logger.info("[CctvMapDataResearchServiceImpl] [getCctvListByLocalMapDataJson] [ktictCctvStatusResultVo] : {}", ktictCctvStatusResultVo);
+				
+				// cctv ÏÑúÎπÑÏä§ÏÉÅÌÉú, ÎùºÏù¥Î∏åÏÉÅÌÉúÍ∞Ä Ï†ïÏÉÅÏù¥ ÏïÑÎãàÎùºÎ©¥, Í±¥ÎÑàÎõ∞Í∏∞.
+				if(!ktictCctvStatusResultVo.getServiceYn().equals("Y")
+							&&ktictCctvStatusResultVo.getLiveAvailableYn().equals("Y")) {
+					continue;
+				}
+				
+				String returnStream = "";
+				CctvMapResearchResultVo cctvMapResearchResultVo = new CctvMapResearchResultVo();
+				
+				// Streaming Url & ThumbnailUrl Get
+				returnStream = cctvKtIctVideoInfoDataService.getCctvStreamingDateByKtIctJson(ktictCctvStatusResultVo.getCctvId());
+				
+				if(StringUtils.isEmpty(returnStream)) {
+					continue;
+				}
+				
+				cctvMapResearchResultVo.setCctvId(ktictCctvStatusResultVo.getCctvId());
+				cctvMapResearchResultVo.setStreamingUrl(returnStream);
+				cctvMapResearchResultVo.setThumbnailUrl(cctvKtIctVideoInfoDataService.getCctvThumbnailMakeUrlByKtIct(ktictCctvStatusResultVo.getCctvId()));
+				cctvMapResearchResultVo.setServiceYn(ktictCctvStatusResultVo.getServiceYn());
+				cctvMapResearchResultVo.setLiveAvailableYn(ktictCctvStatusResultVo.getLiveAvailableYn());
+				
+				cctvMapResearchResultVoList.add(cctvMapResearchResultVo);
+			}
+		}
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		try {
+			resultJsonData = mapper.writeValueAsString(cctvMapResearchResultVoList);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			logger.error("[CctvMapDataResearchServiceImpl] [getAddressListByNaverMapDataJson] [Try Catch resultJsonData] [Exception] ====> {}", e);
+		}
+		
+		return resultJsonData;
+	}
 	
 }
