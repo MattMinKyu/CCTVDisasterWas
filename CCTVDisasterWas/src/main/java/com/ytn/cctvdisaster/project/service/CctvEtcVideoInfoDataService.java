@@ -1,7 +1,5 @@
 package com.ytn.cctvdisaster.project.service;
 
-import java.util.HashMap;
-
 /**
  * CctvVideoInfoDataService Interface
  * 
@@ -14,8 +12,8 @@ public interface CctvEtcVideoInfoDataService {
 	 * getCctvVideoThumbnailDataJson.
 	 * 
 	 * @author mattmk
-	 * @param String inputFilePath
-	 * @return HashMap<String, Object>
+	 * @param String inputFilePath, String imageName
+	 * @return String
 	 */
-	public HashMap<String, Object> getCctvVideoThumbnailDataJson(String inputFilePath);
+	public String getCctvVideoThumbnailDataJson(String inputFilePath, String imageName);
 }

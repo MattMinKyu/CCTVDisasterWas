@@ -187,9 +187,9 @@ public class CctvKtIctVideoInfoDataServiceImpl implements CctvKtIctVideoInfoData
 	}
 	
 	@Override
-	public String getCctvThumbnailMakeUrlByKtIct(String testParam) {
+	public String getCctvThumbnailMakeUrlByKtIct(String cctvId) {
 		
-		return ktictVideoInfoApiUri+ktictVideoInfoApiPath+"/"+testParam+"!jpg";
+		return ktictVideoInfoApiUri+ktictVideoInfoApiPath+"/"+cctvId+"!jpg";
 	}
 	
 }

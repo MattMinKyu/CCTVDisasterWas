@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytn.cctvdisaster.project.dao.CctvCategoryInfoDataDao">
+	
+	<select id="selectCctvCategoryDepth1List" resultType="com.ytn.cctvdisaster.project.dto.CctvCategoryDepth1DataDto">
+		SELECT DISTINCT src_id, src_nm FROM YTNDI.CCTV_INFO
+		ORDER BY src_id
+	</select>
+	
+	<select id="selectCctvCategoryDepth2List" parameterType="String" resultType="com.ytn.cctvdisaster.project.dto.CctvInfoDataDto">
+		SELECT * FROM YTNDI.CCTV_INFO
+ 		WHERE src_id = #{srcId}
+		ORDER BY cctv_nm
+	</select>
+	
+	<select id="selectCctvCategorySearchList" parameterType="String" resultType="com.ytn.cctvdisaster.project.dto.CctvInfoDataDto">
+		SELECT * FROM YTNDI.CCTV_INFO
+ 		<if test='cctvSearchKeyword != null and cctvSearchKeyword != ""'>
+			WHERE UPPER(cctv_nm) LIKE UPPER('%' || #{cctvSearchKeyword} || '%')
+		</if>
+		
+		ORDER BY src_id, cctv_nm
+	</select>
+	
+</mapper>
+

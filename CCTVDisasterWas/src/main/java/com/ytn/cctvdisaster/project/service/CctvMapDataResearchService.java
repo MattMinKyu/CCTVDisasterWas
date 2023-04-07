@@ -1,8 +1,6 @@
 package com.ytn.cctvdisaster.project.service;
 
-import java.util.List;
-
-import com.ytn.cctvdisaster.project.dto.CctvMapResearchDto;
+import com.ytn.cctvdisaster.project.vo.CctvCoordinateMapListResearchVo;
 import com.ytn.cctvdisaster.project.vo.NaverMapLocalResearchVo;
 
 /**
@@ -23,12 +21,12 @@ public interface CctvMapDataResearchService {
 	public String getLocalListByNaverMapDataJson(NaverMapLocalResearchVo naverMapLocalResearchVo);
 	
 	/**
-	 * getCctvListByMapDataJson
+	 * getCctvListByCoordinateLocalMapDataJson
 	 * 
 	 * @author mattmk
-	 * @param cctvMapResearchDto
+	 * @param CctvCoordinateMapListResearchVo cctvMapListResearchVo
 	 * @return String
 	 */
-	public String getCctvListByLocalMapDataJson(CctvMapResearchDto cctvMapResearchDto, List<String> testCctvId);
+	public String getCctvListByCoordinateLocalMapDataJson(CctvCoordinateMapListResearchVo cctvMapListResearchVo);
 	
 }

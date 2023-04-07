@@ -1,8 +1,5 @@
 package com.ytn.cctvdisaster.project.serviceImpl;
 
-import java.util.HashMap;
-
-import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,27 +19,21 @@ public class CctvEtcVideoInfoDataServiceImpl implements CctvEtcVideoInfoDataServ
 	}
 	
 	@Override
-	public HashMap<String, Object> getCctvVideoThumbnailDataJson(String inputFilePath) {
-		Boolean thumbnailCreateResult = Boolean.FALSE;
-		
-		
-		// 썸네일이미지명 난수 생성
-		String imageName = RandomStringUtils.randomAlphanumeric(10);
+	public String getCctvVideoThumbnailDataJson(String inputFilePath, String imageName) {
+		String resultThumbnailData = "";
 		
 		// 썸네일 이미지 생성 함수 호출
 		try {
 			fFmpegUtil.exportThumbnailImg(inputFilePath, imageName, "jpg");
-			thumbnailCreateResult = Boolean.TRUE;
+			resultThumbnailData = imageName+".jpg";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
 			// CCTV커넥션 문제 (연결문제)
 			logger.info("[CctvVideoInfoDataServiceImpl] [getCctvVideoThumbnailDataJson] No Connection =====> {}", e.getMessage());
+			logger.info("[CctvVideoInfoDataServiceImpl] [getCctvVideoThumbnailDataJson] [inputFilePath] No Connection =====> {}", inputFilePath);
 		}
 		
-		logger.info("[CctvVideoInfoDataServiceImpl] [getCctvVideoThumbnailDataJson] thumbnailCreateResult ====> {}", thumbnailCreateResult);
-		
-		
-		return null;
+		return resultThumbnailData;
 	}
 }

@@ -34,8 +34,8 @@ public interface CctvKtIctVideoInfoDataService {
 	 * getCctvStreamingAndJpgDataListByKtIctDataJson.
 	 * 
 	 * @author mattmk
-	 * @param String cctvIdParam
+	 * @param String cctvId
 	 * @return String
 	 */
-	public String getCctvThumbnailMakeUrlByKtIct(String testParam);
+	public String getCctvThumbnailMakeUrlByKtIct(String cctvId);
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytn.cctvdisaster.project.dao.CctvInfoDataDao">
+	
+	<select id="selectCctvCoordinateMapInfoList" parameterType="com.ytn.cctvdisaster.project.vo.CctvCoordinateMapListResearchVo" resultType="com.ytn.cctvdisaster.project.dto.CctvInfoDataDto">
+		SELECT * FROM YTNDI.CCTV_INFO
+		WHERE LAT BETWEEN #{swLat} AND #{neLat}
+		AND LON BETWEEN #{swLng} AND #{neLng}
+		ORDER BY cctv_id
+	</select>
+	
+	
+	<select id="selectCctvIdInfoList" parameterType="java.util.HashMap" resultType="com.ytn.cctvdisaster.project.dto.CctvInfoDataDto">
+		SELECT * FROM YTNDI.CCTV_INFO
+		WHERE 1=1
+		
+		<choose>
+            <when test="cctvIdList.size != 0">
+                AND CCTV_ID IN
+                <foreach collection="cctvIdList" item="cctvId" index="index" separator="," open="(" close=")">
+                    #{cctvId}
+                </foreach>
+            </when>
+        </choose>
+        
+        ORDER BY cctv_id
+	</select>
+	
+</mapper>
+

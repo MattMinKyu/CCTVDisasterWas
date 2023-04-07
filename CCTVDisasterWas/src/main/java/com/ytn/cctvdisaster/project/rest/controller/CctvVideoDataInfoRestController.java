@@ -1,14 +1,16 @@
 package com.ytn.cctvdisaster.project.rest.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ytn.cctvdisaster.project.service.CctvEtcVideoInfoDataService;
-import com.ytn.cctvdisaster.project.service.CctvKtIctVideoInfoDataService;
+import com.ytn.cctvdisaster.project.service.CctvVideoInfoDataService;
 
 
 /**
@@ -17,63 +19,108 @@ import com.ytn.cctvdisaster.project.service.CctvKtIctVideoInfoDataService;
 *
 */
 @RestController
-@RequestMapping("/ytn/cctvdisaster/data/video/")
+@RequestMapping("/ytn/cctvdisaster/data/video")
 public class CctvVideoDataInfoRestController {
 private static final Logger logger = LoggerFactory.getLogger(CctvVideoDataInfoRestController.class);
 	
-	private CctvEtcVideoInfoDataService cctvVideoInfoDataService;
+	private CctvVideoInfoDataService cctvVideoInfoDataService;
 	
-	private CctvKtIctVideoInfoDataService cctvKtIctVideoInfoDataService;
-	
-	public CctvVideoDataInfoRestController(CctvEtcVideoInfoDataService cctvVideoInfoDataService, CctvKtIctVideoInfoDataService cctvKtIctVideoInfoDataService) {
+	public CctvVideoDataInfoRestController(CctvVideoInfoDataService cctvVideoInfoDataService) {
 		this.cctvVideoInfoDataService = cctvVideoInfoDataService;
-		this.cctvKtIctVideoInfoDataService = cctvKtIctVideoInfoDataService;
 	}
 	
+	
+	/**
+	 * CCTV 영상정보 리스트
+	 * 
+	 * @author mattmk
+	 * @param searchLocalName
+	 * @return String
+	 */
+	@PostMapping("/streamingUrl")
+	public String getCctvStreamUrlData(@RequestBody List<String> cctvIdList) {
+		logger.info("[CctvVideoDataInfoRestController] [getCctvStreamUrlData] START ~~!!");
+		
+		String jsonList="";
+		
+		if(cctvIdList.size() == 0) {
+			return jsonList;
+		}
+		
+		jsonList = cctvVideoInfoDataService.getCctvStreamingUrlMapDataJson(cctvIdList);
+		
+		return jsonList;
+	}
+	
+	/**
+	 * CCTV 썸네일정보 리스트
+	 * 
+	 * @author mattmk
+	 * @param searchLocalName
+	 * @return String
+	 */
+	@PostMapping("/thumbnailUrl")
+	public String getCctvThumbnailUrlData(@RequestBody List<String> cctvIdList) {
+		logger.info("[CctvVideoDataInfoRestController] [getCctvThumbnailUrlData] START ~~!!");
+		
+		String jsonList="";
 
-	/**
-	 * CCTV 영상정보 리스트
-	 * 
-	 * @author mattmk
-	 * @param 
-	 * @return String
-	 */
-	@PostMapping("info/list")
-	public String getCctvVideoThumbnailInfoList(@RequestParam(value = "linkPath")String linkPath) {
+		if(cctvIdList.size() == 0) {
+			return jsonList;
+		}
 		
-		logger.info("[CctvMapDataResearchRestController] [getLocalListByNaverMap] START ~~!!");
+		jsonList = cctvVideoInfoDataService.getCctvThumbnailUrlMapDataJson(cctvIdList);
 		
-		//String linkPath="http://220.70.164.229/cctv/hls/sangwonsa.m3u8";
-		//String linkPath="http://220.70.164.229/cctv/hls/solak.m3u8";
-		String jsonList = "";
-		
-		cctvVideoInfoDataService.getCctvVideoThumbnailDataJson(linkPath);
-		   
 		return jsonList;
 	}
+	
 	
 	/**
 	 * CCTV 영상정보 리스트
 	 * 
 	 * @author mattmk
-	 * @param 
+	 * @param searchLocalName
 	 * @return String
 	 */
-	@PostMapping("cctv/list")
-	public String VideoInfoListByKtIctDataList(@RequestParam(value = "cctvId")String cctvId) {
+	/*
+	@PostMapping("/streamingUrl")
+	public String getCctvStreamUrlData(@RequestBody List<CctvLikeDataListVo> cctvIdList) {
+		logger.info("[CctvVideoDataInfoRestController] [getCctvStreamUrlData] START ~~!!");
 		
-		logger.info("[CctvMapDataResearchRestController] [VideoInfoListByKtIctDataList] START ~~!!");
+		String jsonList="";
 		
-		//String linkPath="http://220.70.164.229/cctv/hls/sangwonsa.m3u8";
-		//String linkPath="http://220.70.164.229/cctv/hls/solak.m3u8";
-		String jsonList = "";
+		for(CctvLikeDataListVo temp : cctvIdList){
+			logger.info("[CctvVideoDataInfoRestController] [getCctvStreamUrlData] [temp.getKey()] : {}", temp);
+	      }
 		
-		cctvKtIctVideoInfoDataService.getCctvStatusInfoListByKtIctDataJson(cctvId);
-		   
+		//mapper.writeval
+		
+		/*
+		if(cctvIdList.size() == 0) {
+			return jsonList;
+		}else {
+			for(String temp : cctvIdList) {
+				logger.info("[CctvVideoDataInfoRestController] [getCctvStreamUrlData] [cctvIdList] : {}", temp);
+			}
+		}
+		
+		//jsonList = cctvVideoInfoDataService.getCctvStreamingUrlMapDataJson(cctvIdList);
+		
 		return jsonList;
+		
+		
+		
+		[
+		  {
+		        "cctvId": "7063",
+		        "cctvNm": "가덕영업소"
+		  },
+		  {
+		        "cctvId": "7058",
+		        "cctvNm": "거가1교"
+		  }
+		]
 	}
-	
-	
-	
+	*/
 	
 }
