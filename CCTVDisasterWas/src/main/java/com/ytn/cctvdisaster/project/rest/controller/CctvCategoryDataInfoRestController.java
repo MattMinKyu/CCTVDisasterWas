@@ -36,19 +36,19 @@ private static final Logger logger = LoggerFactory.getLogger(CctvCategoryDataInf
 	 * @return String
 	 */
 	@PostMapping("/depth1/list")
-	public String getDepth1ListData() {
+	public String getDepth1ListData(@RequestParam(value = "keyword")String cctvSearchKeyword) {
 		logger.info("[CctvCategoryDataInfoRestController] [getDepth1ListData] START ~~!!");
 		
 		String jsonList="";
 
-		jsonList = cctvCategoryDataService.getDepth1ListDataJson();
+		jsonList = cctvCategoryDataService.getDepth1ListDataJson(cctvSearchKeyword);
 		
 		return jsonList;
 	}
 	
 	
 	/**
-	 * 중카테고리 리스트
+	 * 소카테고리 리스트
 	 * 
 	 * @author mattmk
 	 * @param String srcId
@@ -56,41 +56,42 @@ private static final Logger logger = LoggerFactory.getLogger(CctvCategoryDataInf
 	 */
 	@SuppressWarnings("deprecation")
 	@PostMapping("/depth2/list")
-	public String getDepth2ListData(@RequestParam(value = "srcId")String srcId) {
+	public String getDepth2ListData(@RequestParam(value = "id")String categoryId, @RequestParam(value = "keyword")String cctvSearchKeyword) {
 		logger.info("[CctvCategoryDataInfoRestController] [getDepth2ListData] START ~~!!");
 		
 		String jsonList="";
 		
-		if(StringUtils.isEmpty(srcId)) {
+		if(StringUtils.isEmpty(categoryId)) {
 			return jsonList;
 		}
 		
-		jsonList = cctvCategoryDataService.getDepth2ListDataJson(srcId);
+		jsonList = cctvCategoryDataService.getDepth2ListDataJson(categoryId, cctvSearchKeyword);
 		
 		return jsonList;
 	}
 	
 	
 	/**
-	 * 카테고리 검색 리스트
+	 * 소카테고리 리스트
 	 * 
 	 * @author mattmk
-	 * @param searchLocalName
+	 * @param String srcId
 	 * @return String
 	 */
 	@SuppressWarnings("deprecation")
-	@PostMapping("/search/list")
-	public String getCctvSearchListData(@RequestParam(value = "cctvSearchKeyword")String cctvSearchKeyword) {
-		logger.info("[CctvCategoryDataInfoRestController] [getCctvSearchListData] START ~~!!");
+	@PostMapping("/depth3/list")
+	public String getDepth3ListData(@RequestParam(value = "id")String categoryId, @RequestParam(value = "keyword")String cctvSearchKeyword) {
+		logger.info("[CctvCategoryDataInfoRestController] [getDepth3ListData] START ~~!!");
 		
 		String jsonList="";
 		
-		if(StringUtils.isEmpty(cctvSearchKeyword)) {
+		if(StringUtils.isEmpty(categoryId)) {
 			return jsonList;
 		}
 		
-		jsonList = cctvCategoryDataService.getCctvCategorySearchListDataJson(cctvSearchKeyword);
+		jsonList = cctvCategoryDataService.getDepth3ListDataJson(categoryId, "", cctvSearchKeyword);
 		
 		return jsonList;
 	}
+	
 }

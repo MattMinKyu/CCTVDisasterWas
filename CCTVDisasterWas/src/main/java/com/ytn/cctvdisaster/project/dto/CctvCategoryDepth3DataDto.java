@@ -1,19 +1,18 @@
 package com.ytn.cctvdisaster.project.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
 /**
-* CctvMapResearchDto
+* CctvCategoryDepth3DataDto
 * 
 * @author mattmk
 * 
 */
 
 @Data
-public class CctvInfoDataDto {
+public class CctvCategoryDepth3DataDto {
 	
 	/**
 	 * cctvId
@@ -22,16 +21,16 @@ public class CctvInfoDataDto {
 	private String cctv_id;
 	
 	/**
-	 * srcGb
+	 * lvl3Nm
 	 */
-	@JsonProperty("srcGb")
-	private String src_gb;
+	@JsonProperty("lvl3Nm")
+	private String lvl3_nm;
 	
 	/**
-	 * cctvNm
+	 * lvl2Id
 	 */
-	@JsonProperty("cctvNm")
-	private String lvl3_nm;
+	@JsonProperty("lvl2Id")
+	private String lvl2_id;
 	
 	/**
 	 * sidoNm
@@ -49,15 +48,4 @@ public class CctvInfoDataDto {
 	 */
 	private double lon;
 	
-	/**
-	 * srcNm
-	 */
-	@JsonProperty("srcNm")
-	private String lvl1_nm;
-	
-	/**
-	 * url
-	 */
-	@JsonIgnore
-	private String url;
 }

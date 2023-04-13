@@ -1,25 +1,21 @@
 package com.ytn.cctvdisaster.project.vo;
 
+import java.util.List;
+
 import lombok.Data;
 
 /**
-* CctvLikeDataListVo
+* CctvIdDataVo
 * 
 * @author mattmk
 * 
 */
 
 @Data
-public class CctvLikeDataListVo {
+public class CctvIdDataVo {
 	
 	/**
 	 * cctvId
 	 */
-	private String cctvId;
-	
-	/**
-	 * cctvNm
-	 */
-	private String cctvNm;
-	
+	private List<String> cctvId;
 }

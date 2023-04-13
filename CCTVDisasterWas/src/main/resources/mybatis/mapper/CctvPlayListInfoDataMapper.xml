@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytn.cctvdisaster.project.dao.CctvPlayListInfoDataDao">
+	
+	<select id="selectCctvPlayListInfoList" resultType="com.ytn.cctvdisaster.project.dto.PlistMstDto">
+		SELECT * FROM YTNDI.PLIST_MST
+		<if test='likeSearchKeyword != null and likeSearchKeyword != ""'>
+			WHERE UPPER(PLIST_NM) LIKE UPPER('%' || #{likeSearchKeyword} || '%')
+		</if>
+		
+ 		ORDER BY PLIST_ID DESC
+	</select>
+	
+	<select id="selectCctvPlayListInfoOne" parameterType="String" resultType="String">
+		SELECT PLIST_ID FROM YTNDI.PLIST_MST
+		WHERE PLIST_ID = #{plistId}
+	</select>
+	
+	<insert id="insertCctvPlayListInfo" parameterType="com.ytn.cctvdisaster.project.dto.PlistMstDto">
+		<selectKey resultType="string" keyProperty="plistId" order="BEFORE">
+        	SELECT TO_CHAR(SYSDATE, 'yymmdd')||TO_CHAR(plist_seq.NEXTVAL, 'FM000') FROM DUAL
+    	</selectKey>    
+		
+		INSERT INTO YTNDI.PLIST_MST (PLIST_ID, USER_NM, PLIST_NM, CAPTION_YN, AUTO_YN, AUTO_TIME, LOCK_YN, INS_YMD, INS_TIME, UPD_YMD, UPD_TIME)
+		VALUES (#{plistId}, #{userNm}, #{plistNm}, #{captionYn}, #{autoYn}, #{autoTime}, 'N', TO_CHAR(SYSDATE, 'yyyy.mm.dd'), TO_CHAR(SYSDATE, 'hh24:mi:ss'), TO_CHAR(SYSDATE, 'yyyy.mm.dd'), TO_CHAR(SYSDATE, 'hh24:mi:ss'))
+	</insert>
+	
+	<update id="updateCctvPlayListInfo" parameterType="com.ytn.cctvdisaster.project.dto.PlistMstDto">
+		UPDATE YTNDI.PLIST_MST SET USER_NM = #{userNm}, PLIST_NM = #{plistNm}, CAPTION_YN = #{captionYn}, AUTO_YN = #{autoYn}, AUTO_TIME = #{autoTime}
+		WHERE PLIST_ID = #{plistId}
+	</update>
+	
+	<delete id="deleteCctvPlayListInfo" parameterType="String">
+		DELETE FROM YTNDI.PLIST_MST
+		WHERE PLIST_ID = #{plistId}
+	</delete>
+	
+</mapper>

@@ -12,26 +12,27 @@ public interface CctvCategoryDataService {
 	 * getDepth1ListDataJson
 	 * 
 	 * @author mattmk
-	 * @param 
+	 * @param String cctvSearchKeyword
 	 * @return String
 	 */
-	public String getDepth1ListDataJson();
+	public String getDepth1ListDataJson(String cctvSearchKeyword);
 	
 	/**
 	 * getDepth2ListDataJson
 	 * 
 	 * @author mattmk
-	 * @param String srcId
+	 * @param String categoryId, String cctvSearchKeyword
 	 * @return String
 	 */
-	public String getDepth2ListDataJson(String srcId);
+	public String getDepth2ListDataJson(String categoryId, String cctvSearchKeyword);
 	
 	/**
-	 * getCctvCategorySearchListDataJson
+	 * getDepth3ListDataJson
 	 * 
 	 * @author mattmk
-	 * @param String cctvSearchKeyword
+	 * @param String categoryId, String callCategory, String cctvSearchKeyword
 	 * @return String
 	 */
-	public String getCctvCategorySearchListDataJson(String cctvSearchKeyword);
+	public String getDepth3ListDataJson(String categoryId, String callCategory, String cctvSearchKeyword);
+	
 }

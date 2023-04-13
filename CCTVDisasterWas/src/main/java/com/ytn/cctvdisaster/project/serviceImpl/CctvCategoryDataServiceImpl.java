@@ -1,19 +1,25 @@
 package com.ytn.cctvdisaster.project.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ytn.cctvdisaster.project.dao.CctvCategoryInfoDataDao;
 import com.ytn.cctvdisaster.project.dto.CctvCategoryDepth1DataDto;
-import com.ytn.cctvdisaster.project.dto.CctvInfoDataDto;
-import com.ytn.cctvdisaster.project.result.vo.CctvCategorySearchResultListVo;
-import com.ytn.cctvdisaster.project.result.vo.CctvCategorySearchResultVo;
+import com.ytn.cctvdisaster.project.dto.CctvCategoryDepth2DataDto;
+import com.ytn.cctvdisaster.project.dto.CctvCategoryDepth3DataDto;
+import com.ytn.cctvdisaster.project.result.vo.CctvCategoryDepth1ResultVo;
+import com.ytn.cctvdisaster.project.result.vo.CctvCategoryDepth2ResultVo;
+import com.ytn.cctvdisaster.project.result.vo.CctvCategoryDepth3ResultListVo;
+import com.ytn.cctvdisaster.project.result.vo.CctvCategoryDepth3ResultVo;
 import com.ytn.cctvdisaster.project.service.CctvCategoryDataService;
 
 @Service
@@ -29,20 +35,32 @@ public class CctvCategoryDataServiceImpl implements CctvCategoryDataService{
 	
 	
 	@Override
-	public String getDepth1ListDataJson() {
+	public String getDepth1ListDataJson(String cctvSearchKeyword) {
 		String resultJsonData = "";
-		List<CctvCategoryDepth1DataDto> cctvCategoryDepth1DataDto = new ArrayList<CctvCategoryDepth1DataDto>();
+		List<CctvCategoryDepth1DataDto> cctvCategoryDepth1DataDtoList = new ArrayList<CctvCategoryDepth1DataDto>();
 		
-		cctvCategoryDepth1DataDto = cctvCategoryInfoDataDao.selectCctvCategoryDepth1List();
+		cctvCategoryDepth1DataDtoList = cctvCategoryInfoDataDao.selectCctvCategoryDepth1List(cctvSearchKeyword);
 		
-		if(cctvCategoryDepth1DataDto.size() == 0) {
+		if(cctvCategoryDepth1DataDtoList.size() == 0) {
 			return resultJsonData;
+		}
+		
+		List<CctvCategoryDepth1ResultVo> cctvCategoryDepth1ResultVoList = new ArrayList<CctvCategoryDepth1ResultVo>();
+		
+		for(CctvCategoryDepth1DataDto cctvCategoryDepth1DataDto : cctvCategoryDepth1DataDtoList) {
+			CctvCategoryDepth1ResultVo cctvCategoryDepth1ResultVo = new CctvCategoryDepth1ResultVo();
+			cctvCategoryDepth1ResultVo.setId(cctvCategoryDepth1DataDto.getLvl1_id());
+			cctvCategoryDepth1ResultVo.setName(cctvCategoryDepth1DataDto.getLvl1_nm());
+			cctvCategoryDepth1ResultVo.setHasItems(Boolean.TRUE);
+			cctvCategoryDepth1ResultVo.setGroupId("0");
+			
+			cctvCategoryDepth1ResultVoList.add(cctvCategoryDepth1ResultVo);
 		}
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
 		try {
-			resultJsonData = mapper.writeValueAsString(cctvCategoryDepth1DataDto);
+			resultJsonData = mapper.writeValueAsString(cctvCategoryDepth1ResultVoList);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			logger.error("[CctvCategoryDataServiceImpl] [getDepth1ListDataJson] [Try Catch resultJsonData] [Exception] ====> {}", e);
@@ -51,21 +69,43 @@ public class CctvCategoryDataServiceImpl implements CctvCategoryDataService{
 		return resultJsonData;
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
-	public String getDepth2ListDataJson(String srcId) {
+	public String getDepth2ListDataJson(String categoryId, String cctvSearchKeyword) {
 		String resultJsonData = "";
-		List<CctvInfoDataDto> cctvInfoDataDto = new ArrayList<CctvInfoDataDto>();
+		List<CctvCategoryDepth2DataDto> cctvCategoryDepth2DataDtoList = new ArrayList<CctvCategoryDepth2DataDto>();
 		
-		cctvInfoDataDto = cctvCategoryInfoDataDao.selectCctvCategoryDepth2List(srcId);
+		Map<String, Object> daoParams = new HashMap<String, Object>();
+		daoParams.put("categoryId", categoryId);
+		daoParams.put("cctvSearchKeyword", cctvSearchKeyword);
+		cctvCategoryDepth2DataDtoList = cctvCategoryInfoDataDao.selectCctvCategoryDepth2List(daoParams);
 		
-		if(cctvInfoDataDto.size() == 0) {
+		if(cctvCategoryDepth2DataDtoList.size() == 0) {
 			return resultJsonData;
+		}
+		
+		List<CctvCategoryDepth2ResultVo> cctvCategoryDepth2ResultVoList = new ArrayList<CctvCategoryDepth2ResultVo>();
+		
+		for(CctvCategoryDepth2DataDto cctvCategoryDepth2DataDto : cctvCategoryDepth2DataDtoList) {
+			CctvCategoryDepth2ResultVo cctvCategoryDepth2ResultVo = new CctvCategoryDepth2ResultVo();
+			cctvCategoryDepth2ResultVo.setName(cctvCategoryDepth2DataDto.getLvl2_nm());
+			cctvCategoryDepth2ResultVo.setGroupId(categoryId);
+			
+			if(StringUtils.isEmpty(cctvCategoryDepth2DataDto.getLvl2_nm())) {
+				resultJsonData = this.getDepth3ListDataJson(cctvCategoryDepth2DataDto.getLvl2_id(), categoryId, cctvSearchKeyword);
+				return resultJsonData;
+			}else {
+				cctvCategoryDepth2ResultVo.setId(cctvCategoryDepth2DataDto.getLvl2_id());
+				cctvCategoryDepth2ResultVo.setHasItems(Boolean.TRUE);
+			}
+			
+			cctvCategoryDepth2ResultVoList.add(cctvCategoryDepth2ResultVo);
 		}
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
 		try {
-			resultJsonData = mapper.writeValueAsString(cctvInfoDataDto);
+			resultJsonData = mapper.writeValueAsString(cctvCategoryDepth2ResultVoList);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			logger.error("[CctvCategoryDataServiceImpl] [getDepth2ListDataJson] [Try Catch resultJsonData] [Exception] ====> {}", e);
@@ -74,74 +114,60 @@ public class CctvCategoryDataServiceImpl implements CctvCategoryDataService{
 		return resultJsonData;
 	}
 	
-	
+	@SuppressWarnings("deprecation")
 	@Override
-	public String getCctvCategorySearchListDataJson(String cctvSearchKeyword) {
+	public String getDepth3ListDataJson(String categoryId, String callCategory, String cctvSearchKeyword) {
 		String resultJsonData = "";
-		List<CctvInfoDataDto> cctvInfoDataDto = new ArrayList<CctvInfoDataDto>();
+		List<CctvCategoryDepth3DataDto> cctvCategoryDepth3DataDtoList = new ArrayList<CctvCategoryDepth3DataDto>();
 		
-		cctvInfoDataDto = cctvCategoryInfoDataDao.selectCctvCategorySearchList(cctvSearchKeyword);
+		Map<String, Object> daoParams = new HashMap<String, Object>();
+		daoParams.put("categoryId", categoryId);
+		daoParams.put("cctvSearchKeyword", cctvSearchKeyword);
+		cctvCategoryDepth3DataDtoList = cctvCategoryInfoDataDao.selectCctvCategoryDepth3List(daoParams);
 		
-		if(cctvInfoDataDto.size() == 0) {
+		if(cctvCategoryDepth3DataDtoList.size() == 0) {
 			return resultJsonData;
 		}
 		
-		String cctvSrcIdTemp = "";
-		String cctvSrcNmTemp = "";
-		List<CctvCategorySearchResultListVo> cctvCategorySearchResultListVoArray = new ArrayList<CctvCategorySearchResultListVo>();
-		List<CctvCategorySearchResultVo> cctvCategorySearchResultArray = new ArrayList<CctvCategorySearchResultVo>();
-		CctvCategorySearchResultListVo cctvCategorySearchResultListVo = new CctvCategorySearchResultListVo();
+		List<CctvCategoryDepth3ResultVo> cctvCategoryDepth3ResultVoList = new ArrayList<CctvCategoryDepth3ResultVo>();
 		
-		for(int i=0; i<cctvInfoDataDto.size(); i++) {
-			CctvCategorySearchResultVo cctvCategorySearchResultVo = new CctvCategorySearchResultVo();
+		for(CctvCategoryDepth3DataDto cctvCategoryDepth3DataDto : cctvCategoryDepth3DataDtoList) {
+			CctvCategoryDepth3ResultVo cctvCategoryDepth3ResultVo = new CctvCategoryDepth3ResultVo();
+			cctvCategoryDepth3ResultVo.setId(cctvCategoryDepth3DataDto.getCctv_id());
+			cctvCategoryDepth3ResultVo.setName(cctvCategoryDepth3DataDto.getLvl3_nm());
+			cctvCategoryDepth3ResultVo.setSidoNm(cctvCategoryDepth3DataDto.getSido_nm());
+			cctvCategoryDepth3ResultVo.setHasItems(Boolean.FALSE);
+			cctvCategoryDepth3ResultVo.setLat(cctvCategoryDepth3DataDto.getLat());
+			cctvCategoryDepth3ResultVo.setLon(cctvCategoryDepth3DataDto.getLon());
 			
-			if(i == 0) {
-				cctvSrcIdTemp = cctvInfoDataDto.get(i).getSrc_id();
-				cctvSrcNmTemp = cctvInfoDataDto.get(i).getSrc_nm();
-				cctvCategorySearchResultListVo.setCategoryDepth1(cctvSrcIdTemp);
-				cctvCategorySearchResultListVo.setSrcNm(cctvSrcNmTemp);
+			if(!StringUtils.isEmpty(callCategory)) {
+				cctvCategoryDepth3ResultVo.setGroupId(callCategory);
+			}else {
+				cctvCategoryDepth3ResultVo.setGroupId(cctvCategoryDepth3DataDto.getLvl2_id());
 			}
 			
-			if(!cctvSrcIdTemp.equals(cctvInfoDataDto.get(i).getSrc_id())) {
-				cctvCategorySearchResultListVo.setItems(cctvCategorySearchResultArray);
-				cctvCategorySearchResultListVo.setCategoryDepth1(cctvSrcIdTemp);
-				cctvCategorySearchResultListVo.setSrcNm(cctvSrcNmTemp);
-				cctvCategorySearchResultListVoArray.add(cctvCategorySearchResultListVo);
-				
-				cctvCategorySearchResultArray = new ArrayList<CctvCategorySearchResultVo>();
-				cctvCategorySearchResultListVo = new CctvCategorySearchResultListVo();
-				
-				cctvSrcIdTemp = cctvInfoDataDto.get(i).getSrc_id();
-				cctvSrcNmTemp = cctvInfoDataDto.get(i).getSrc_nm();
-			}
 			
-			cctvCategorySearchResultVo.setCctvId(cctvInfoDataDto.get(i).getCctv_id());
-			cctvCategorySearchResultVo.setCctvNm(cctvInfoDataDto.get(i).getCctv_nm());
-			cctvCategorySearchResultVo.setSrcNm(cctvInfoDataDto.get(i).getSrc_nm());
-			cctvCategorySearchResultVo.setSrcGb(cctvInfoDataDto.get(i).getSrc_gb());
-			cctvCategorySearchResultVo.setSidoNm(cctvInfoDataDto.get(i).getSido_nm());
-			cctvCategorySearchResultVo.setLat(cctvInfoDataDto.get(i).getLat());
-			cctvCategorySearchResultVo.setLon(cctvInfoDataDto.get(i).getLon());
+			cctvCategoryDepth3ResultVoList.add(cctvCategoryDepth3ResultVo);
+		}
+		
+		
+		if(cctvCategoryDepth3ResultVoList.size() > 0) {
+			CctvCategoryDepth3ResultListVo cctvCategoryDepth3ResultListVo = new CctvCategoryDepth3ResultListVo();
+			cctvCategoryDepth3ResultListVo.setItems(cctvCategoryDepth3ResultVoList);
+			ObjectMapper mapper = new ObjectMapper();
 			
-			cctvCategorySearchResultArray.add(cctvCategorySearchResultVo);
-			
-			if(i == (cctvInfoDataDto.size()-1)) {
-				cctvCategorySearchResultListVo.setItems(cctvCategorySearchResultArray);
-				cctvCategorySearchResultListVo.setCategoryDepth1(cctvSrcIdTemp);
-				cctvCategorySearchResultListVo.setSrcNm(cctvSrcNmTemp);
-				cctvCategorySearchResultListVoArray.add(cctvCategorySearchResultListVo);
+			try {
+				resultJsonData = mapper.writeValueAsString(cctvCategoryDepth3ResultListVo);
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+				logger.error("[CctvCategoryDataServiceImpl] [getDepth3ListDataJson] [Try Catch resultJsonData] [Exception] ====> {}", e);
 			}
 		}
 		
-		ObjectMapper mapper = new ObjectMapper();
 		
-		try {
-			resultJsonData = mapper.writeValueAsString(cctvCategorySearchResultListVoArray);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			logger.error("[CctvCategoryDataServiceImpl] [getCctvCategorySearchListDataJson] [Try Catch resultJsonData] [Exception] ====> {}", e);
-		}
+		
 		
 		return resultJsonData;
 	}
+	
 }

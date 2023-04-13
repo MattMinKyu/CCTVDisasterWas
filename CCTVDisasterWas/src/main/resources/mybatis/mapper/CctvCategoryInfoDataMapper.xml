@@ -3,14 +3,33 @@
 <mapper namespace="com.ytn.cctvdisaster.project.dao.CctvCategoryInfoDataDao">
 	
 	<select id="selectCctvCategoryDepth1List" resultType="com.ytn.cctvdisaster.project.dto.CctvCategoryDepth1DataDto">
-		SELECT DISTINCT src_id, src_nm FROM YTNDI.CCTV_INFO
-		ORDER BY src_id
+		SELECT DISTINCT LVL1_ID, LVL1_NM FROM YTNDI.CCTV_INFO
+		<if test='cctvSearchKeyword != null and cctvSearchKeyword != ""'>
+			WHERE UPPER(LVL3_NM) LIKE UPPER('%' || #{cctvSearchKeyword} || '%')
+		</if>
+		
+ 		ORDER BY LVL1_ID
 	</select>
 	
-	<select id="selectCctvCategoryDepth2List" parameterType="String" resultType="com.ytn.cctvdisaster.project.dto.CctvInfoDataDto">
-		SELECT * FROM YTNDI.CCTV_INFO
- 		WHERE src_id = #{srcId}
-		ORDER BY cctv_nm
+	<select id="selectCctvCategoryDepth2List" parameterType="String" resultType="com.ytn.cctvdisaster.project.dto.CctvCategoryDepth2DataDto">
+		SELECT DISTINCT LVL2_ID, LVL2_NM FROM YTNDI.CCTV_INFO
+ 		WHERE LVL1_ID = #{categoryId}
+ 		<if test='cctvSearchKeyword != null and cctvSearchKeyword != ""'>
+			AND UPPER(LVL3_NM) LIKE UPPER('%' || #{cctvSearchKeyword} || '%')
+		</if>
+		
+		ORDER BY LVL2_ID
+	</select>
+	
+	<select id="selectCctvCategoryDepth3List" parameterType="String" resultType="com.ytn.cctvdisaster.project.dto.CctvCategoryDepth3DataDto">
+		SELECT CCTV_ID, LVL3_NM, SIDO_NM, LAT ,LON, LVL2_ID
+		FROM YTNDI.CCTV_INFO
+ 		WHERE LVL2_ID = #{categoryId}
+ 		<if test='cctvSearchKeyword != null and cctvSearchKeyword != ""'>
+			AND UPPER(LVL3_NM) LIKE UPPER('%' || #{cctvSearchKeyword} || '%')
+		</if>
+		
+		ORDER BY CCTV_ID
 	</select>
 	
 	<select id="selectCctvCategorySearchList" parameterType="String" resultType="com.ytn.cctvdisaster.project.dto.CctvInfoDataDto">
@@ -23,4 +42,3 @@
 	</select>
 	
 </mapper>
-

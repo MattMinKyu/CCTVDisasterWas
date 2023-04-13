@@ -71,9 +71,9 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 			CctvInfoStreamingUrlResultVo cctvInfoStreamingUrlResultVo = new CctvInfoStreamingUrlResultVo();
 			
 			cctvInfoStreamingUrlResultVo.setCctvId(cctvInfoDataDtoList.getCctv_id());
-			cctvInfoStreamingUrlResultVo.setCctvNm(cctvInfoDataDtoList.getCctv_nm());
+			cctvInfoStreamingUrlResultVo.setCctvNm(cctvInfoDataDtoList.getLvl3_nm());
 			cctvInfoStreamingUrlResultVo.setSrcGb(cctvInfoDataDtoList.getSrc_gb());
-			cctvInfoStreamingUrlResultVo.setSrcNm(cctvInfoDataDtoList.getSrc_nm());
+			cctvInfoStreamingUrlResultVo.setSrcNm(cctvInfoDataDtoList.getLvl1_nm());
 			cctvInfoStreamingUrlResultVo.setSidoNm(cctvInfoDataDtoList.getSido_nm());
 			cctvInfoStreamingUrlResultVo.setLat(cctvInfoDataDtoList.getLat());
 			cctvInfoStreamingUrlResultVo.setLon(cctvInfoDataDtoList.getLon());
@@ -177,9 +177,9 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 			CctvInfoThumbnailUrlResultVo cctvInfoThumbnailUrlResultVo = new CctvInfoThumbnailUrlResultVo();
 			
 			cctvInfoThumbnailUrlResultVo.setCctvId(cctvInfoDataDtoList.getCctv_id());
-			cctvInfoThumbnailUrlResultVo.setCctvNm(cctvInfoDataDtoList.getCctv_nm());
+			cctvInfoThumbnailUrlResultVo.setCctvNm(cctvInfoDataDtoList.getLvl3_nm());
 			cctvInfoThumbnailUrlResultVo.setSrcGb(cctvInfoDataDtoList.getSrc_gb());
-			cctvInfoThumbnailUrlResultVo.setSrcNm(cctvInfoDataDtoList.getSrc_nm());
+			cctvInfoThumbnailUrlResultVo.setSrcNm(cctvInfoDataDtoList.getLvl1_nm());
 			cctvInfoThumbnailUrlResultVo.setSidoNm(cctvInfoDataDtoList.getSido_nm());
 			cctvInfoThumbnailUrlResultVo.setLat(cctvInfoDataDtoList.getLat());
 			cctvInfoThumbnailUrlResultVo.setLon(cctvInfoDataDtoList.getLon());
@@ -213,6 +213,7 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 		 **/
 		for(CctvInfoThumbnailUrlResultVo cctvInfoThumbnailUrlResultVo : cctvInfoThumbnailUrlResultVoList) {
 			if(cctvInfoThumbnailUrlResultVo.getSrcGb().equals("Y")) {
+				/*
 				if(!StringUtils.isEmpty(cctvInfoThumbnailUrlResultVo.getStreamingUrl())) {
 					String thumbnailCreateResult = "";
 					
@@ -225,7 +226,7 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 						cctvInfoThumbnailUrlResultVo.setServiceYn("N");
 					}
 				}
-				
+				*/
 				continue;
 			}else if(cctvInfoThumbnailUrlResultVo.getSrcGb().equals("K")) {
 				if(ktictCctvStatusResultVoList.size() > 0) {

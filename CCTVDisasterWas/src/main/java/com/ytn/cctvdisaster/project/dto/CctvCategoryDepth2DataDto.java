@@ -5,25 +5,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
-* CctvCategoryDepth1DataDto
+* CctvCategoryDepth2DataDto
 * 
 * @author mattmk
 * 
 */
 
 @Data
-public class CctvCategoryDepth1DataDto {
+public class CctvCategoryDepth2DataDto {
 	
 	/**
-	 * lvl1Id
+	 * lvl2Id
 	 */
-	@JsonProperty("lvl1Id")
-	private String lvl1_id;
+	@JsonProperty("lvl2Id")
+	private String lvl2_id;
 	
 	/**
-	 * lvl1Nm
+	 * lvl2Nm
 	 */
-	@JsonProperty("lvl1Nm")
-	private String lvl1_nm;
+	@JsonProperty("lvl2Nm")
+	private String lvl2_nm;
 	
 }
