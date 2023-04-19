@@ -1,6 +1,7 @@
 package com.ytn.cctvdisaster.project.rest.controller;
 
-import org.apache.ibatis.annotations.Delete;
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ytn.cctvdisaster.project.service.CctvPlayListDataService;
 import com.ytn.cctvdisaster.project.vo.CctvPlayListDataVo;
+import com.ytn.cctvdisaster.project.vo.CctvPlayListDetailDataVo;
 
 
 /**
@@ -26,10 +28,10 @@ import com.ytn.cctvdisaster.project.vo.CctvPlayListDataVo;
 public class CctvPlayListDataInfoRestController {
 private static final Logger logger = LoggerFactory.getLogger(CctvPlayListDataInfoRestController.class);
 	
-	private CctvPlayListDataService cctvLikeDataService;
+	private CctvPlayListDataService cctvPlayListDataService;
 	
-	public CctvPlayListDataInfoRestController(CctvPlayListDataService cctvLikeDataService) {
-		this.cctvLikeDataService = cctvLikeDataService;
+	public CctvPlayListDataInfoRestController(CctvPlayListDataService cctvPlayListDataService) {
+		this.cctvPlayListDataService = cctvPlayListDataService;
 	}
 	
 
@@ -46,7 +48,7 @@ private static final Logger logger = LoggerFactory.getLogger(CctvPlayListDataInf
 		
 		String jsonList="";
 
-		jsonList = cctvLikeDataService.getCctvPlayListDataJson(likeSearchKeyword);
+		jsonList = cctvPlayListDataService.getCctvPlayListDataJson(likeSearchKeyword);
 		
 		return jsonList;
 	}
@@ -69,7 +71,7 @@ private static final Logger logger = LoggerFactory.getLogger(CctvPlayListDataInf
 		}
 		
 		
-		resultCnt = cctvLikeDataService.modifyCctvPlayListDataJson(cctvPlayListDataVo);
+		resultCnt = cctvPlayListDataService.modifyCctvPlayListDataJson(cctvPlayListDataVo);
 		
 		return resultCnt;
 	}
@@ -92,9 +94,81 @@ private static final Logger logger = LoggerFactory.getLogger(CctvPlayListDataInf
 			return resultCnt;
 		}
 		
-		resultCnt = cctvLikeDataService.deleteCctvPlayListDataJson(plistId);
+		resultCnt = cctvPlayListDataService.deleteCctvPlayListDataJson(plistId);
 		
 		return resultCnt;
 	}
 	
+	/**
+	 * PlayList Detail List
+	 * 
+	 * @author mattmk
+	 * @param 
+	 * @return String
+	 */
+	@SuppressWarnings("deprecation")
+	@PostMapping("/list/detail")
+	public String getCctvPlayListDetailData(@RequestParam(value = "plistId")String plistId) {
+		logger.info("[CctvPlayListDataInfoRestController] [getCctvPlayListDetailData] START ~~!!");
+		
+		String jsonList="";
+		
+		if(StringUtils.isEmpty(plistId)) {
+			return jsonList;
+		}
+		
+		jsonList = cctvPlayListDataService.getCctvPlayListDetailDataJson(plistId);
+		
+		return jsonList;
+	}
+	
+	/**
+	 * PlayList Detail 추가, 수정
+	 * 
+	 * @author mattmk
+	 * @param 
+	 * @return String
+	 */
+	@PutMapping("/modify/detail")
+	public int modifyCctvPlayListDetailData(@RequestBody CctvPlayListDetailDataVo cctvPlayListDetailDataVo) {
+		logger.info("[CctvPlayListDataInfoRestController] [modifyCctvPlayListDetailData] START ~~!!");
+		
+		int resultCnt=0;
+		
+		if(cctvPlayListDetailDataVo == null || cctvPlayListDetailDataVo.getItems().size() == 0) {
+			return resultCnt;
+		}
+		
+		resultCnt = cctvPlayListDataService.modifyCctvPlayListDetailDataJson(cctvPlayListDetailDataVo);
+		
+		return resultCnt;
+	}
+	
+	/**
+	 * PlayList Lock 수정
+	 * 
+	 * @author mattmk
+	 * @param 
+	 * @return String
+	 */
+	@SuppressWarnings("deprecation")
+	@PutMapping("/modify/lock")
+	public String modifyCctvPlayListLockData(@RequestParam(value = "lockYn")String lockYn, HttpServletRequest request) {
+		logger.info("[CctvPlayListDataInfoRestController] [modifyCctvPlayListLockData] START ~~!!");
+		
+		String jsonList="";
+		
+		if(StringUtils.isEmpty(lockYn)) {
+			return jsonList;
+		}
+		
+		logger.info("[CctvPlayListDataInfoRestController] [modifyCctvPlayListLockData] request.getRemoteAddr() : {}", request.getRemoteAddr());
+		
+		cctvPlayListDataService.modifyCctvPlayListLockDataJson(request.getRemoteAddr());
+		//resultCnt = cctvPlayListDataService.modifyCctvPlayListDetailDataJson(cctvPlayListDetailDataVo);
+		
+		
+		
+		return jsonList;
+	}
 }

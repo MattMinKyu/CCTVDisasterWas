@@ -52,20 +52,26 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 		logger.info("[CctvVideoInfoDataServiceImpl] [getCctvStreamUrlMapDataJson] Start ~!!!");
 		
 		String resultJsonData = "";
-		
+		ObjectMapper mapper = new ObjectMapper();
 		List<CctvInfoDataDto> cctvInfoDataDto = new ArrayList<CctvInfoDataDto>();
+		List<CctvInfoStreamingUrlResultVo> cctvInfoStreamingUrlResultVoList = new ArrayList<CctvInfoStreamingUrlResultVo>();
+		
 		Map<String, Object> daoParam = new HashMap<String, Object>();
 		daoParam.put("cctvIdList", cctvIdList);
 		
 		cctvInfoDataDto = cctvInfoDataDao.selectCctvIdInfoList(daoParam);
 		
 		if(cctvInfoDataDto.size() == 0) {
-			return resultJsonData;
+			try {
+				return mapper.writeValueAsString(cctvInfoStreamingUrlResultVoList);
+			} catch (JsonProcessingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		
 		StringBuilder cctvIdStrBuild = new StringBuilder();
-		List<CctvInfoStreamingUrlResultVo> cctvInfoStreamingUrlResultVoList = new ArrayList<CctvInfoStreamingUrlResultVo>();
 		
 		for(CctvInfoDataDto cctvInfoDataDtoList : cctvInfoDataDto) {
 			CctvInfoStreamingUrlResultVo cctvInfoStreamingUrlResultVo = new CctvInfoStreamingUrlResultVo();
@@ -139,9 +145,6 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 			}
 		}
 		
-		
-		ObjectMapper mapper = new ObjectMapper();
-		
 		try {
 			resultJsonData = mapper.writeValueAsString(cctvInfoStreamingUrlResultVoList);
 		} catch (JsonProcessingException e) {
@@ -159,19 +162,25 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 		logger.info("[CctvVideoInfoDataServiceImpl] [getCctvThumbnailUrlMapDataJson] Start ~!!!");
 		
 		String resultJsonData = "";
+		ObjectMapper mapper = new ObjectMapper();
 		
 		List<CctvInfoDataDto> cctvInfoDataDto = new ArrayList<CctvInfoDataDto>();
+		List<CctvInfoThumbnailUrlResultVo> cctvInfoThumbnailUrlResultVoList = new ArrayList<CctvInfoThumbnailUrlResultVo>();
+		
 		Map<String, Object> daoParam = new HashMap<String, Object>();
 		daoParam.put("cctvIdList", cctvIdList);
 		
 		cctvInfoDataDto = cctvInfoDataDao.selectCctvIdInfoList(daoParam);
 		
 		if(cctvInfoDataDto.size() == 0) {
-			return resultJsonData;
+			try {
+				return mapper.writeValueAsString(cctvInfoThumbnailUrlResultVoList);
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		StringBuilder cctvIdStrBuild = new StringBuilder();
-		List<CctvInfoThumbnailUrlResultVo> cctvInfoThumbnailUrlResultVoList = new ArrayList<CctvInfoThumbnailUrlResultVo>();
 		
 		for(CctvInfoDataDto cctvInfoDataDtoList : cctvInfoDataDto) {
 			CctvInfoThumbnailUrlResultVo cctvInfoThumbnailUrlResultVo = new CctvInfoThumbnailUrlResultVo();
@@ -258,8 +267,6 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 			}
 		}
 		
-		
-		ObjectMapper mapper = new ObjectMapper();
 		
 		try {
 			resultJsonData = mapper.writeValueAsString(cctvInfoThumbnailUrlResultVoList);

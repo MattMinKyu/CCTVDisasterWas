@@ -95,16 +95,10 @@ public class CctvMapDataResearchServiceImpl implements CctvMapDataResearchServic
 		logger.info("[CctvMapDataResearchServiceImpl] [getCctvListByLocalMapDataJson] [cctvMapListResearchVo] : {} ", cctvMapListResearchVo);
 		
 		String resultJsonData = "";
+		ObjectMapper mapper = new ObjectMapper();
 		List<CctvInfoDataDto> cctvInfoDataDto = new ArrayList<CctvInfoDataDto>();
 		
 		cctvInfoDataDto = cctvInfoDataDao.selectCctvCoordinateMapInfoList(cctvMapListResearchVo);
-		
-		if(cctvInfoDataDto.size() == 0) {
-			return resultJsonData;
-		}
-		
-		
-		ObjectMapper mapper = new ObjectMapper();
 		
 		try {
 			resultJsonData = mapper.writeValueAsString(cctvInfoDataDto);

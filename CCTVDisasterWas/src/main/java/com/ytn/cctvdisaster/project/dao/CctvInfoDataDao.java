@@ -37,4 +37,13 @@ public interface CctvInfoDataDao {
 	 * @return List<CctvInfoDataDto>
 	 */
 	List<CctvInfoDataDto> selectCctvIdInfoList(@RequestParam("cctvIdList")Map<String, Object> cctvIdList);
+	
+	/**
+	 * selectCctvIdInfoCount
+	 * 
+	 * @author mattmk
+	 * @param String
+	 * @return int
+	 */
+	int selectCctvIdInfoCount(@RequestParam("cctvId")String cctvId);
 }

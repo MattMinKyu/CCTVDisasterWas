@@ -6,13 +6,14 @@
 		SELECT * FROM YTNDI.PLIST_MST
 		<if test='likeSearchKeyword != null and likeSearchKeyword != ""'>
 			WHERE UPPER(PLIST_NM) LIKE UPPER('%' || #{likeSearchKeyword} || '%')
+			OR UPPER(USER_NM) LIKE UPPER('%' || #{likeSearchKeyword} || '%')
 		</if>
 		
  		ORDER BY PLIST_ID DESC
 	</select>
 	
-	<select id="selectCctvPlayListInfoOne" parameterType="String" resultType="String">
-		SELECT PLIST_ID FROM YTNDI.PLIST_MST
+	<select id="selectCctvPlayListInfoCount" parameterType="String" resultType="Integer">
+		SELECT COUNT(PLIST_ID) FROM YTNDI.PLIST_MST
 		WHERE PLIST_ID = #{plistId}
 	</select>
 	
@@ -26,7 +27,7 @@
 	</insert>
 	
 	<update id="updateCctvPlayListInfo" parameterType="com.ytn.cctvdisaster.project.dto.PlistMstDto">
-		UPDATE YTNDI.PLIST_MST SET USER_NM = #{userNm}, PLIST_NM = #{plistNm}, CAPTION_YN = #{captionYn}, AUTO_YN = #{autoYn}, AUTO_TIME = #{autoTime}
+		UPDATE YTNDI.PLIST_MST SET USER_NM = #{userNm}, PLIST_NM = #{plistNm}, CAPTION_YN = #{captionYn}, AUTO_YN = #{autoYn}, AUTO_TIME = #{autoTime}, UPD_YMD = TO_CHAR(SYSDATE, 'yyyy.mm.dd'), UPD_TIME = TO_CHAR(SYSDATE, 'hh24:mi:ss')
 		WHERE PLIST_ID = #{plistId}
 	</update>
 	
@@ -34,5 +35,28 @@
 		DELETE FROM YTNDI.PLIST_MST
 		WHERE PLIST_ID = #{plistId}
 	</delete>
+	
+	<delete id="deleteCctvPlayListDetailInfo" parameterType="String">
+		DELETE FROM YTNDI.PLIST_DTL
+		WHERE PLIST_ID = #{plistId}
+	</delete>
+	
+	<select id="selectCctvPlayListDetailInfoList" resultType="com.ytn.cctvdisaster.project.dto.PlistDtlJoinCctvInfoDto">
+		SELECT a.PLIST_ID , a.PLIST_NO, a.CAPTION_NM, a.INS_YMD, a.INS_TIME, a.UPD_YMD, a.UPD_TIME, b.CCTV_ID, b.LVL1_NM, b.LVL3_NM, b.URL, b.SRC_GB FROM YTNDI.PLIST_DTL a
+		INNER JOIN YTNDI.CCTV_INFO b ON b.CCTV_ID = a.CCTV_ID 
+		WHERE a.PLIST_ID = #{plistId}
+		ORDER BY a.PLIST_NO ASC
+	</select>
+	
+	<select id="selectCctvPlayListDetailInfoCount" parameterType="String" resultType="Integer">
+		SELECT COUNT(PLIST_ID) FROM YTNDI.PLIST_DTL
+		WHERE PLIST_ID = #{plistId}
+	</select>
+	
+	
+	<insert id="insertCctvPlayListDetailInfo" parameterType="com.ytn.cctvdisaster.project.dto.PlistDtlDto">
+		INSERT INTO YTNDI.PLIST_DTL (PLIST_ID, PLIST_NO, CCTV_ID, CAPTION_NM, INS_YMD, INS_TIME, UPD_YMD, UPD_TIME)
+		VALUES (#{plist_id}, #{plist_no}, #{cctv_id}, #{caption_nm}, TO_CHAR(SYSDATE, 'yyyy.mm.dd'), TO_CHAR(SYSDATE, 'hh24:mi:ss'), TO_CHAR(SYSDATE, 'yyyy.mm.dd'), TO_CHAR(SYSDATE, 'hh24:mi:ss'))
+	</insert>
 	
 </mapper>

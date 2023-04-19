@@ -37,15 +37,20 @@ public class CctvCategoryDataServiceImpl implements CctvCategoryDataService{
 	@Override
 	public String getDepth1ListDataJson(String cctvSearchKeyword) {
 		String resultJsonData = "";
+		ObjectMapper mapper = new ObjectMapper();
 		List<CctvCategoryDepth1DataDto> cctvCategoryDepth1DataDtoList = new ArrayList<CctvCategoryDepth1DataDto>();
+		List<CctvCategoryDepth1ResultVo> cctvCategoryDepth1ResultVoList = new ArrayList<CctvCategoryDepth1ResultVo>();
 		
 		cctvCategoryDepth1DataDtoList = cctvCategoryInfoDataDao.selectCctvCategoryDepth1List(cctvSearchKeyword);
 		
 		if(cctvCategoryDepth1DataDtoList.size() == 0) {
-			return resultJsonData;
+			try {
+				return mapper.writeValueAsString(cctvCategoryDepth1ResultVoList);
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
 		}
 		
-		List<CctvCategoryDepth1ResultVo> cctvCategoryDepth1ResultVoList = new ArrayList<CctvCategoryDepth1ResultVo>();
 		
 		for(CctvCategoryDepth1DataDto cctvCategoryDepth1DataDto : cctvCategoryDepth1DataDtoList) {
 			CctvCategoryDepth1ResultVo cctvCategoryDepth1ResultVo = new CctvCategoryDepth1ResultVo();
@@ -57,7 +62,6 @@ public class CctvCategoryDataServiceImpl implements CctvCategoryDataService{
 			cctvCategoryDepth1ResultVoList.add(cctvCategoryDepth1ResultVo);
 		}
 		
-		ObjectMapper mapper = new ObjectMapper();
 		
 		try {
 			resultJsonData = mapper.writeValueAsString(cctvCategoryDepth1ResultVoList);
@@ -73,7 +77,9 @@ public class CctvCategoryDataServiceImpl implements CctvCategoryDataService{
 	@Override
 	public String getDepth2ListDataJson(String categoryId, String cctvSearchKeyword) {
 		String resultJsonData = "";
+		ObjectMapper mapper = new ObjectMapper();
 		List<CctvCategoryDepth2DataDto> cctvCategoryDepth2DataDtoList = new ArrayList<CctvCategoryDepth2DataDto>();
+		List<CctvCategoryDepth2ResultVo> cctvCategoryDepth2ResultVoList = new ArrayList<CctvCategoryDepth2ResultVo>();
 		
 		Map<String, Object> daoParams = new HashMap<String, Object>();
 		daoParams.put("categoryId", categoryId);
@@ -81,10 +87,12 @@ public class CctvCategoryDataServiceImpl implements CctvCategoryDataService{
 		cctvCategoryDepth2DataDtoList = cctvCategoryInfoDataDao.selectCctvCategoryDepth2List(daoParams);
 		
 		if(cctvCategoryDepth2DataDtoList.size() == 0) {
-			return resultJsonData;
+			try {
+				return mapper.writeValueAsString(cctvCategoryDepth2ResultVoList);
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
 		}
-		
-		List<CctvCategoryDepth2ResultVo> cctvCategoryDepth2ResultVoList = new ArrayList<CctvCategoryDepth2ResultVo>();
 		
 		for(CctvCategoryDepth2DataDto cctvCategoryDepth2DataDto : cctvCategoryDepth2DataDtoList) {
 			CctvCategoryDepth2ResultVo cctvCategoryDepth2ResultVo = new CctvCategoryDepth2ResultVo();
@@ -102,8 +110,6 @@ public class CctvCategoryDataServiceImpl implements CctvCategoryDataService{
 			cctvCategoryDepth2ResultVoList.add(cctvCategoryDepth2ResultVo);
 		}
 		
-		ObjectMapper mapper = new ObjectMapper();
-		
 		try {
 			resultJsonData = mapper.writeValueAsString(cctvCategoryDepth2ResultVoList);
 		} catch (JsonProcessingException e) {
@@ -118,7 +124,9 @@ public class CctvCategoryDataServiceImpl implements CctvCategoryDataService{
 	@Override
 	public String getDepth3ListDataJson(String categoryId, String callCategory, String cctvSearchKeyword) {
 		String resultJsonData = "";
+		ObjectMapper mapper = new ObjectMapper();
 		List<CctvCategoryDepth3DataDto> cctvCategoryDepth3DataDtoList = new ArrayList<CctvCategoryDepth3DataDto>();
+		CctvCategoryDepth3ResultListVo cctvCategoryDepth3ResultListVo = new CctvCategoryDepth3ResultListVo();
 		
 		Map<String, Object> daoParams = new HashMap<String, Object>();
 		daoParams.put("categoryId", categoryId);
@@ -126,7 +134,11 @@ public class CctvCategoryDataServiceImpl implements CctvCategoryDataService{
 		cctvCategoryDepth3DataDtoList = cctvCategoryInfoDataDao.selectCctvCategoryDepth3List(daoParams);
 		
 		if(cctvCategoryDepth3DataDtoList.size() == 0) {
-			return resultJsonData;
+			try {
+				return mapper.writeValueAsString(cctvCategoryDepth3ResultListVo);
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		List<CctvCategoryDepth3ResultVo> cctvCategoryDepth3ResultVoList = new ArrayList<CctvCategoryDepth3ResultVo>();
@@ -152,20 +164,15 @@ public class CctvCategoryDataServiceImpl implements CctvCategoryDataService{
 		
 		
 		if(cctvCategoryDepth3ResultVoList.size() > 0) {
-			CctvCategoryDepth3ResultListVo cctvCategoryDepth3ResultListVo = new CctvCategoryDepth3ResultListVo();
 			cctvCategoryDepth3ResultListVo.setItems(cctvCategoryDepth3ResultVoList);
-			ObjectMapper mapper = new ObjectMapper();
-			
-			try {
-				resultJsonData = mapper.writeValueAsString(cctvCategoryDepth3ResultListVo);
-			} catch (JsonProcessingException e) {
-				e.printStackTrace();
-				logger.error("[CctvCategoryDataServiceImpl] [getDepth3ListDataJson] [Try Catch resultJsonData] [Exception] ====> {}", e);
-			}
 		}
 		
-		
-		
+		try {
+			resultJsonData = mapper.writeValueAsString(cctvCategoryDepth3ResultListVo);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			logger.error("[CctvCategoryDataServiceImpl] [getDepth3ListDataJson] [Try Catch resultJsonData] [Exception] ====> {}", e);
+		}
 		
 		return resultJsonData;
 	}

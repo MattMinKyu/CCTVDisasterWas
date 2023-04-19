@@ -26,5 +26,10 @@
         ORDER BY cctv_id
 	</select>
 	
+	<select id="selectCctvIdInfoCount" parameterType="String" resultType="Integer">
+		SELECT COUNT(CCTV_ID) FROM YTNDI.CCTV_INFO
+		WHERE CCTV_ID = #{cctvId}
+	</select>
+	
 </mapper>
 

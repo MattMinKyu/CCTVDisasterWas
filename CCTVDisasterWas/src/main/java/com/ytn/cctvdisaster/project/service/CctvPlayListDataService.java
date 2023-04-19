@@ -1,6 +1,7 @@
 package com.ytn.cctvdisaster.project.service;
 
 import com.ytn.cctvdisaster.project.vo.CctvPlayListDataVo;
+import com.ytn.cctvdisaster.project.vo.CctvPlayListDetailDataVo;
 
 /**
  * CctvPlayListDataService Interface
@@ -37,5 +38,33 @@ public interface CctvPlayListDataService {
 	 * @return int
 	 */
 	public int deleteCctvPlayListDataJson(String plistId);
+	
+	/**
+	 * getCctvPlayListDetailDataJson
+	 * 
+	 * @author mattmk
+	 * @param String plistId
+	 * @return String
+	 */
+	public String getCctvPlayListDetailDataJson(String plistId);
+	
+	/**
+	 * modifyCctvPlayListDetailDataJson
+	 * 
+	 * @author mattmk
+	 * @param CctvPlayListDetailDataVo cctvPlayListDetailDataVo
+	 * @return int
+	 */
+	public int modifyCctvPlayListDetailDataJson(CctvPlayListDetailDataVo cctvPlayListDetailDataVo);
+	
+	
+	/**
+	 * modifyCctvPlayListLockDataJson
+	 * 
+	 * @author mattmk
+	 * @param String lockYn
+	 * @return String
+	 */
+	public String modifyCctvPlayListLockDataJson(String lockYn);
 	
 }
