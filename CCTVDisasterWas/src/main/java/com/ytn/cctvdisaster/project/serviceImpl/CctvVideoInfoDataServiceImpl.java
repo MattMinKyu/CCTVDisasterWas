@@ -2,6 +2,7 @@ package com.ytn.cctvdisaster.project.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -136,6 +137,8 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 							
 							if(!StringUtils.isEmpty(returnStream)) {
 								cctvInfoStreamingUrlResultVo.setStreamingUrl(returnStream);
+							}else {
+								cctvInfoStreamingUrlResultVo.setServiceYn("N");
 							}
 						}
 						
@@ -162,13 +165,30 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 		logger.info("[CctvVideoInfoDataServiceImpl] [getCctvThumbnailUrlMapDataJson] Start ~!!!");
 		
 		String resultJsonData = "";
-		ObjectMapper mapper = new ObjectMapper();
-		
+		String cctvIdListStrBuilderStr = "";
 		List<CctvInfoDataDto> cctvInfoDataDto = new ArrayList<CctvInfoDataDto>();
 		List<CctvInfoThumbnailUrlResultVo> cctvInfoThumbnailUrlResultVoList = new ArrayList<CctvInfoThumbnailUrlResultVo>();
+		StringBuilder cctvIdListStrBuilder = new StringBuilder();
+		Map<Integer, String> overlapCctvIdMap = new HashMap<Integer, String>();
+		
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		for(int i=0; i<cctvIdList.size(); i++) {
+			if(cctvIdListStrBuilder.indexOf(cctvIdList.get(i)) >= 0) {
+				overlapCctvIdMap.put(i, cctvIdList.get(i));
+			}else {
+				cctvIdListStrBuilder.append(cctvIdList.get(i)+",");
+			}
+		}
+		
+		cctvIdListStrBuilderStr = cctvIdListStrBuilder.substring(0, cctvIdListStrBuilder.length()-1).toString();
+		
+		logger.info("[CctvVideoInfoDataServiceImpl] [getCctvThumbnailUrlMapDataJson] cctvIdListStrBuilderStr : {}", cctvIdListStrBuilderStr);
 		
 		Map<String, Object> daoParam = new HashMap<String, Object>();
 		daoParam.put("cctvIdList", cctvIdList);
+		daoParam.put("cctvIdListStr", cctvIdListStrBuilderStr);
 		
 		cctvInfoDataDto = cctvInfoDataDao.selectCctvIdInfoList(daoParam);
 		
@@ -203,7 +223,6 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 			cctvInfoThumbnailUrlResultVoList.add(cctvInfoThumbnailUrlResultVo);
 		}
 		
-		
 		// CCTV STATUS Get
 		List<KtictCctvStatusResultVo> ktictCctvStatusResultVoList = new ArrayList<KtictCctvStatusResultVo>();
 		
@@ -222,28 +241,27 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 		 **/
 		for(CctvInfoThumbnailUrlResultVo cctvInfoThumbnailUrlResultVo : cctvInfoThumbnailUrlResultVoList) {
 			if(cctvInfoThumbnailUrlResultVo.getSrcGb().equals("Y")) {
-				/*
 				if(!StringUtils.isEmpty(cctvInfoThumbnailUrlResultVo.getStreamingUrl())) {
 					String thumbnailCreateResult = "";
 					
 					thumbnailCreateResult = cctvEtcVideoInfoDataService.getCctvVideoThumbnailDataJson(cctvInfoThumbnailUrlResultVo.getStreamingUrl(), cctvInfoThumbnailUrlResultVo.getCctvId());
 					
-					if(!StringUtils.isEmpty(thumbnailCreateResult)) {
+					if(StringUtils.isEmpty(thumbnailCreateResult)) {
+						cctvInfoThumbnailUrlResultVo.setServiceYn("N");
+					}else {
 						cctvInfoThumbnailUrlResultVo.setServiceYn("Y");
 						cctvInfoThumbnailUrlResultVo.setThumbnailUrl(ytnThumbnailUri+ytnThumbnailPath+"/"+thumbnailCreateResult);
-					}else {
-						cctvInfoThumbnailUrlResultVo.setServiceYn("N");
 					}
 				}
-				*/
 				continue;
+				
 			}else if(cctvInfoThumbnailUrlResultVo.getSrcGb().equals("K")) {
 				if(ktictCctvStatusResultVoList.size() > 0) {
 					for(KtictCctvStatusResultVo ktictCctvStatusResultVo:ktictCctvStatusResultVoList) {
 						if(cctvInfoThumbnailUrlResultVo.getCctvId().equals(ktictCctvStatusResultVo.getCctvId())) {
 							logger.info("[CctvVideoInfoDataServiceImpl] [getCctvThumbnailUrlMapDataJson] [ktictCctvStatusResultVo.getCctvId()] : {}", ktictCctvStatusResultVo.getCctvId());
 							
-							// cctv 서비스상태, 라이브상태가 정상이 아니라면, 건너뛰기.
+							// cctv 서비스상태, 라이브상태가 정상이 아니라면, 건너뛰기.s
 							if(!(ktictCctvStatusResultVo.getServiceYn().equals("Y")
 										&& ktictCctvStatusResultVo.getLiveAvailableYn().equals("Y"))) {
 								cctvInfoThumbnailUrlResultVo.setServiceYn("N");
@@ -267,6 +285,24 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 			}
 		}
 		
+		/**
+		 * 중복 cctvId 데이터, 제자리에 밀어넣기.
+		 */
+		if(!overlapCctvIdMap.isEmpty()) {
+			for(Integer key : overlapCctvIdMap.keySet()){
+	            for(CctvInfoThumbnailUrlResultVo cctvInfoThumbnailUrlResultVo : cctvInfoThumbnailUrlResultVoList) {
+	            	if(overlapCctvIdMap.get(key).equals(cctvInfoThumbnailUrlResultVo.getCctvId())) {
+	            		CctvInfoThumbnailUrlResultVo cctvInfoThumbnailUrlResultVoTemp = new CctvInfoThumbnailUrlResultVo();
+	            		
+	            		cctvInfoThumbnailUrlResultVoTemp = cctvInfoThumbnailUrlResultVo;
+	            		cctvInfoThumbnailUrlResultVoList.add(key, cctvInfoThumbnailUrlResultVoTemp);
+	            		break;
+	            	}
+	            }
+	            
+	        }
+			
+		}
 		
 		try {
 			resultJsonData = mapper.writeValueAsString(cctvInfoThumbnailUrlResultVoList);

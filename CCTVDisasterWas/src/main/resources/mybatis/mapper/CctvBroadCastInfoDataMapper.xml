@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytn.cctvdisaster.project.dao.CctvBroadCastInfoDataDao">
+	
+	<select id="selectCctvLockYnCount" resultType="Integer" parameterType="com.ytn.cctvdisaster.project.vo.CctvBroadCastDataVo">
+		SELECT COUNT(PLIST_ID) FROM YTNDI.PLIST_MST
+		WHERE PLIST_ID = #{plistId}
+		AND LOCK_YN = #{lockYn}
+	</select>
+	
+	<update id="modifyCctvBroadCastLockData" parameterType="com.ytn.cctvdisaster.project.vo.CctvBroadCastDataVo">
+		UPDATE YTNDI.PLIST_MST SET LOCK_YN = #{lockYn}, LOCK_IP = #{lockIp}, LOCK_YMD = TO_CHAR(SYSDATE, 'yyyy.mm.dd'), LOCK_TIME = TO_CHAR(SYSDATE, 'hh24:mi:ss')
+		WHERE PLIST_ID = #{plistId}
+	</update>
+	
+	<select id="selectCctvBroadCastLockInfoData" resultType="com.ytn.cctvdisaster.project.dto.CctvBroadCastLockDto">
+		SELECT PLIST_ID, USER_NM, PLIST_NM, LOCK_YN, LOCK_IP, LOCK_YMD, LOCK_TIME, CAPTION_YN, AUTO_YN, AUTO_TIME  FROM YTNDI.PLIST_MST
+		WHERE LOCK_YN = 'Y'
+		AND ROWNUM = 1
+	</select>
+	
+	<select id="selectCctvBroadCastRabbitMqSendData" resultType="com.ytn.cctvdisaster.project.dto.CctvBroadCastLockDto" parameterType="com.ytn.cctvdisaster.project.vo.CctvBroadCastDataVo">
+		SELECT PLIST_ID, USER_NM, PLIST_NM, LOCK_YN, LOCK_IP, LOCK_YMD, LOCK_TIME, CAPTION_YN, AUTO_YN, AUTO_TIME  FROM YTNDI.PLIST_MST
+		WHERE PLIST_ID = #{plistId}
+	</select>
+	
+</mapper>

@@ -2,10 +2,7 @@ package com.ytn.cctvdisaster.project.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
-
-import com.ytn.cctvdisaster.project.result.vo.RabbitMqResponseDataVo;
 
 
 @Component
@@ -31,6 +28,7 @@ public class RabbitMqMessageListener {
 		    key = "ytn.cctv.disaster"
 		))
 	*/
+	/*
 	@RabbitListener(queues = "${rabbitmq.queue.name}")
 	public void processMessage1(RabbitMqResponseDataVo rabbitMqResponseDataVo) {
 		
@@ -51,4 +49,5 @@ public class RabbitMqMessageListener {
 		logger.info("[RabbitMqMessageListener] [processMessage] cctv_disaster3 : {}", rabbitMqResponseDataVo);
 		
 	}
+	*/
 }

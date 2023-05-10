@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -20,7 +18,6 @@ import com.ytn.cctvdisaster.project.dto.PlistDtlJoinCctvInfoDto;
 import com.ytn.cctvdisaster.project.dto.PlistMstDto;
 import com.ytn.cctvdisaster.project.result.vo.CctvPlayListDetailResultVo;
 import com.ytn.cctvdisaster.project.result.vo.KtictCctvStatusResultVo;
-import com.ytn.cctvdisaster.project.result.vo.RabbitMqResponseDataVo;
 import com.ytn.cctvdisaster.project.service.CctvKtIctVideoInfoDataService;
 import com.ytn.cctvdisaster.project.service.CctvPlayListDataService;
 import com.ytn.cctvdisaster.project.vo.CctvPlayListDataVo;
@@ -32,25 +29,16 @@ public class CctvPlayListDataServiceImpl implements CctvPlayListDataService{
 	
 	private static final Logger logger = LoggerFactory.getLogger(CctvPlayListDataServiceImpl.class);
 	
-	@Value("${rabbitmq.exchange.name}")
-    private String exchange_name;
-	
-	@Value("${rabbitmq.routingkey.name}")
-    private String routingKey;
-	
 	private CctvPlayListInfoDataDao cctvPlayListInfoDataDao;
 	
 	private CctvInfoDataDao cctvInfoDataDao;
 	
-	private RabbitTemplate rabbitTemplate;
-	
 	private CctvKtIctVideoInfoDataService cctvKtIctVideoInfoDataService;
 	
 	public CctvPlayListDataServiceImpl(CctvPlayListInfoDataDao cctvPlayListInfoDataDao, CctvInfoDataDao cctvInfoDataDao
-										,RabbitTemplate rabbitTemplate, CctvKtIctVideoInfoDataService cctvKtIctVideoInfoDataService) {
+										,CctvKtIctVideoInfoDataService cctvKtIctVideoInfoDataService) {
 		this.cctvPlayListInfoDataDao = cctvPlayListInfoDataDao;
 		this.cctvInfoDataDao = cctvInfoDataDao;
-		this.rabbitTemplate = rabbitTemplate;
 		this.cctvKtIctVideoInfoDataService = cctvKtIctVideoInfoDataService;
 	}
 	
@@ -224,6 +212,8 @@ public class CctvPlayListDataServiceImpl implements CctvPlayListDataService{
 							
 							if(!StringUtils.isEmpty(returnStream)) {
 								cctvPlayListDetailResultVo.setStreamingUrl(returnStream);
+							}else {
+								cctvPlayListDetailResultVo.setServiceYn("N");
 							}
 						}
 						
@@ -306,26 +296,4 @@ public class CctvPlayListDataServiceImpl implements CctvPlayListDataService{
 		return resultCnt;
 	}
 	
-	@Override
-	public String modifyCctvPlayListLockDataJson(String lockYn) {
-		RabbitMqResponseDataVo rabbitMqResponseDataVo = new RabbitMqResponseDataVo();
-		rabbitMqResponseDataVo.setCctvId("1234567");
-		rabbitMqResponseDataVo.setLockYn("disaster1");
-		
-		//logger.info("[CctvPlayListDataServiceImpl] [modifyCctvPlayListLockDataJson] rabbitMqResponseDataVo : {}", rabbitMqResponseDataVo);
-		try {
-			rabbitTemplate.convertAndSend(exchange_name, routingKey, rabbitMqResponseDataVo);
-			
-			rabbitMqResponseDataVo.setLockYn("disaster2");
-			rabbitTemplate.convertAndSend(exchange_name, "ytn.cctv.disaster2", rabbitMqResponseDataVo);
-			
-			rabbitMqResponseDataVo.setLockYn("disaster3");
-			rabbitTemplate.convertAndSend(exchange_name, "ytn.cctv.disaster3", rabbitMqResponseDataVo);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		
-		return null;
-	}
 }

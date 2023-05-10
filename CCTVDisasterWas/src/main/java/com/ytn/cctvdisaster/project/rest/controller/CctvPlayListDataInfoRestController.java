@@ -1,7 +1,5 @@
 package com.ytn.cctvdisaster.project.rest.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -144,31 +142,4 @@ private static final Logger logger = LoggerFactory.getLogger(CctvPlayListDataInf
 		return resultCnt;
 	}
 	
-	/**
-	 * PlayList Lock 수정
-	 * 
-	 * @author mattmk
-	 * @param 
-	 * @return String
-	 */
-	@SuppressWarnings("deprecation")
-	@PutMapping("/modify/lock")
-	public String modifyCctvPlayListLockData(@RequestParam(value = "lockYn")String lockYn, HttpServletRequest request) {
-		logger.info("[CctvPlayListDataInfoRestController] [modifyCctvPlayListLockData] START ~~!!");
-		
-		String jsonList="";
-		
-		if(StringUtils.isEmpty(lockYn)) {
-			return jsonList;
-		}
-		
-		logger.info("[CctvPlayListDataInfoRestController] [modifyCctvPlayListLockData] request.getRemoteAddr() : {}", request.getRemoteAddr());
-		
-		cctvPlayListDataService.modifyCctvPlayListLockDataJson(request.getRemoteAddr());
-		//resultCnt = cctvPlayListDataService.modifyCctvPlayListDetailDataJson(cctvPlayListDetailDataVo);
-		
-		
-		
-		return jsonList;
-	}
 }

@@ -57,14 +57,4 @@ public interface CctvPlayListDataService {
 	 */
 	public int modifyCctvPlayListDetailDataJson(CctvPlayListDetailDataVo cctvPlayListDetailDataVo);
 	
-	
-	/**
-	 * modifyCctvPlayListLockDataJson
-	 * 
-	 * @author mattmk
-	 * @param String lockYn
-	 * @return String
-	 */
-	public String modifyCctvPlayListLockDataJson(String lockYn);
-	
 }

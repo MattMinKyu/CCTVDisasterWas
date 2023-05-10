@@ -3,19 +3,19 @@ package com.ytn.cctvdisaster.project.result.vo;
 import lombok.Data;
 
 /**
-* RabbitMqResponseDataVo
+* RabbitMqBroadCastLockDataRequestVo
 * 
 * @author mattmk
 * 
 */
 
 @Data
-public class RabbitMqResponseDataVo {
+public class RabbitMqBroadCastLockDataRequestVo {
 	
 	/**
-	 * cctvId
+	 * plistId
 	 */
-	private String cctvId;
+	private String plistId;
 	
 	/**
 	 * lockYn

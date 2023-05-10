@@ -15,7 +15,7 @@ import lombok.Data;
 public class NaverMapLocalResearchResultVo {
 	
 	/**
-	 * 상태 코드
+	 * status
 	 */
 	private Integer status;
 	

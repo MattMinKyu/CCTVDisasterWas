@@ -9,7 +9,7 @@
 			OR UPPER(USER_NM) LIKE UPPER('%' || #{likeSearchKeyword} || '%')
 		</if>
 		
- 		ORDER BY PLIST_ID DESC
+ 		ORDER BY LOCK_YN DESC, UPD_YMD DESC, UPD_TIME DESC
 	</select>
 	
 	<select id="selectCctvPlayListInfoCount" parameterType="String" resultType="Integer">

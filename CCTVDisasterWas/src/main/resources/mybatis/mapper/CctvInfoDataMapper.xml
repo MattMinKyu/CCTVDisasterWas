@@ -23,7 +23,11 @@
             </when>
         </choose>
         
-        ORDER BY cctv_id
+        <choose>
+            <when test="cctvIdListStr != null">
+        		ORDER BY INSTR(#{cctvIdListStr}, CCTV_ID)
+        	</when>
+        </choose>
 	</select>
 	
 	<select id="selectCctvIdInfoCount" parameterType="String" resultType="Integer">
