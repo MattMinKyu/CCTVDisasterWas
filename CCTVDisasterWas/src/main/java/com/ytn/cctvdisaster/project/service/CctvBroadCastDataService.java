@@ -12,10 +12,10 @@ public interface CctvBroadCastDataService {
 	 * getCctvBroadCastLockInfoDataJson
 	 * 
 	 * @author mattmk
-	 * @param String remoteIp
+	 * @param 
 	 * @return String
 	 */
-	public String getCctvBroadCastLockInfoDataJson(String remoteIp);
+	public String getCctvBroadCastLockInfoDataJson();
 	
 	/**
 	 * modifyCctvPlayListLockDataJson

@@ -39,12 +39,12 @@ private static final Logger logger = LoggerFactory.getLogger(CctvBroadCastDataIn
 	 * @return String
 	 */
 	@PostMapping("/info/lock")
-	public String getCctvBroadCastLockInfoData(HttpServletRequest request) {
+	public String getCctvBroadCastLockInfoData() {
 		logger.info("[CctvBroadCastDataInfoRestController] [getCctvBroadCastLockInfoData] START ~~!!");
 		
 		String jsonList="";
 
-		jsonList = cctvBroadCastDataService.getCctvBroadCastLockInfoDataJson(request.getRemoteAddr());
+		jsonList = cctvBroadCastDataService.getCctvBroadCastLockInfoDataJson();
 		
 		return jsonList;
 	}

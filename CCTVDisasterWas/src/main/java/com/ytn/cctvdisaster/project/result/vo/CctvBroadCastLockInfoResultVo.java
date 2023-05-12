@@ -32,10 +32,6 @@ public class CctvBroadCastLockInfoResultVo {
 	 */
 	private String lockYn;
 	
-	/**
-	 * myLockYn
-	 */
-	private Boolean myLockYn;
 	
 	/**
 	 * lockIp

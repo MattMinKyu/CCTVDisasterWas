@@ -38,7 +38,7 @@ public class CctvBroadCastDataServiceImpl implements CctvBroadCastDataService{
 	
 	
 	@Override
-	public String getCctvBroadCastLockInfoDataJson(String remoteIp) {
+	public String getCctvBroadCastLockInfoDataJson() {
 		String resultJsonData = "";
 		
 		CctvBroadCastLockDto cctvBroadCastLockDto = cctvBroadCastInfoDataDao.selectCctvBroadCastLockInfoData();
@@ -47,7 +47,6 @@ public class CctvBroadCastDataServiceImpl implements CctvBroadCastDataService{
 			return null;
 		}
 		
-		Boolean myLockResultType = Boolean.FALSE;
 		CctvBroadCastLockInfoResultVo cctvBroadCastLockInfoResultVo = new CctvBroadCastLockInfoResultVo();
 		
 		cctvBroadCastLockInfoResultVo.setPlistId(cctvBroadCastLockDto.getPlist_id());
@@ -60,12 +59,6 @@ public class CctvBroadCastDataServiceImpl implements CctvBroadCastDataService{
 		cctvBroadCastLockInfoResultVo.setLockIp(cctvBroadCastLockDto.getLock_ip());
 		cctvBroadCastLockInfoResultVo.setLockYmd(cctvBroadCastLockDto.getLock_ymd());
 		cctvBroadCastLockInfoResultVo.setLockTime(cctvBroadCastLockDto.getLock_time().substring(0, cctvBroadCastLockDto.getLock_time().length()-3));
-		
-		if(remoteIp.equals(cctvBroadCastLockDto.getLock_ip())) {
-			myLockResultType = Boolean.TRUE;
-		}
-		
-		cctvBroadCastLockInfoResultVo.setMyLockYn(myLockResultType);
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
@@ -120,7 +113,6 @@ public class CctvBroadCastDataServiceImpl implements CctvBroadCastDataService{
 				return 0;
 			}
 			
-			Boolean myLockResultType = Boolean.FALSE;
 			CctvBroadCastLockInfoResultVo cctvBroadCastLockInfoResultVo = new CctvBroadCastLockInfoResultVo();
 			
 			cctvBroadCastLockInfoResultVo.setPlistId(cctvBroadCastLockDto.getPlist_id());
@@ -133,12 +125,6 @@ public class CctvBroadCastDataServiceImpl implements CctvBroadCastDataService{
 			cctvBroadCastLockInfoResultVo.setLockIp(cctvBroadCastLockDto.getLock_ip());
 			cctvBroadCastLockInfoResultVo.setLockYmd(cctvBroadCastLockDto.getLock_ymd());
 			cctvBroadCastLockInfoResultVo.setLockTime(cctvBroadCastLockDto.getLock_time().substring(0, cctvBroadCastLockDto.getLock_time().length()-3));
-			
-			if(remoteIp.equals(cctvBroadCastLockDto.getLock_ip())) {
-				myLockResultType = Boolean.TRUE;
-			}
-			
-			cctvBroadCastLockInfoResultVo.setMyLockYn(myLockResultType);
 			
 			rabbitTemplate.convertAndSend(exchangeName, routingKey, cctvBroadCastLockInfoResultVo);
 		}

@@ -57,4 +57,9 @@ public class NaverMapLocalResearchResultListVo {
 	 */
 	private String mapy;
 	
+	/**
+	 * returnType
+	 */
+	private String returnType;
+	
 }

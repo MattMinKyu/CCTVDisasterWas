@@ -18,6 +18,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ytn.cctvdisaster.project.dao.CctvInfoDataDao;
 import com.ytn.cctvdisaster.project.dto.CctvInfoDataDto;
+import com.ytn.cctvdisaster.project.result.vo.NaverMapAddressResearchResultListVo;
+import com.ytn.cctvdisaster.project.result.vo.NaverMapAddressResearchResultVo;
+import com.ytn.cctvdisaster.project.result.vo.NaverMapLocalResearchResultListVo;
 import com.ytn.cctvdisaster.project.result.vo.NaverMapLocalResearchResultVo;
 import com.ytn.cctvdisaster.project.service.CctvMapDataResearchService;
 import com.ytn.cctvdisaster.project.vo.CctvCoordinateMapListResearchVo;
@@ -41,6 +44,18 @@ public class CctvMapDataResearchServiceImpl implements CctvMapDataResearchServic
 	
 	@Value("${naver.map.api.secret}")
     private String naverMapApiSecret;
+	
+	@Value("${navercloud.map.api.uri}")
+	private String naverCloudMapApiUrl;
+	
+	@Value("${navercloud.map.api.path}")
+	private String naverCloudMapApiPath;
+	
+	@Value("${navercloud.map.api.id}")
+	private String naverCloudMapApiKeyId;
+	
+	@Value("${navercloud.map.api.key}")
+	private String naverCloudMapApiKey;
 	
 	
 	public CctvMapDataResearchServiceImpl(CctvInfoDataDao cctvInfoDataDao) {
@@ -76,21 +91,81 @@ public class CctvMapDataResearchServiceImpl implements CctvMapDataResearchServic
 	    ResponseEntity<NaverMapLocalResearchResultVo> response = restTemplate.exchange(req, NaverMapLocalResearchResultVo.class);
 	    response.getBody().setStatus(response.getStatusCode().value());
 	    
+	    if(response.getBody().getItems().size() > 0) {
+	    	for(NaverMapLocalResearchResultListVo naverMapLocalResearchResultListVo : response.getBody().getItems()) {
+	    		naverMapLocalResearchResultListVo.setReturnType("local");
+	    	}
+	    	
+	    	try {
+				resultJsonData = mapper.writeValueAsString(response.getBody());
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+				logger.error("[CctvMapDataResearchServiceImpl] [getAddressListByNaverMapDataJson] [Try Catch resultJsonData] [Exception] ====> {}", e);
+			}
+	    	
+	    	return resultJsonData;
+	    }
+		
+		URI uri2 = UriComponentsBuilder
+	                .fromUriString(naverCloudMapApiUrl)
+	                .path(naverCloudMapApiPath)
+	                .queryParam("query", naverMapLocalResearchVo.getQuery())
+	                .queryParam("count", 5)
+	                // UTF-8인코딩.
+	                .encode(Charset.forName("UTF-8"))
+	                .build()
+	                .toUri();
+	
+	    // header �� �߰� get���� ��û�ϱ� ������ Void�� �޴´�.
+	    RequestEntity<Void> req2 = RequestEntity
+	            .get(uri2)
+	            .header("X-NCP-APIGW-API-KEY-ID",naverCloudMapApiKeyId)
+	            .header("X-NCP-APIGW-API-KEY",naverCloudMapApiKey)
+	            .build();
+	
+	    ResponseEntity<NaverMapAddressResearchResultVo> response2 = restTemplate.exchange(req2, NaverMapAddressResearchResultVo.class);
+	    NaverMapAddressResearchResultVo naverMapAddressResearchResultVo = (NaverMapAddressResearchResultVo) response2.getBody();
+	    
+	    if(naverMapAddressResearchResultVo.getAddresses().size() == 0) {
+	    	try {
+	    		resultJsonData = mapper.writeValueAsString(naverMapAddressResearchResultVo);
+	    	} catch (JsonProcessingException e) {
+	    		e.printStackTrace();
+	    		logger.error("[CctvMapDataResearchServiceImpl] [naverMapAddressResearchResultVo] [Try Catch resultJsonData] [Exception] ====> {}", e);
+	    	}
+	    		return resultJsonData;
+	    }
+	    
+	    NaverMapLocalResearchResultVo naverMapLocalResearchResultVo = new NaverMapLocalResearchResultVo();
+	    NaverMapLocalResearchResultListVo naverMapLocalResearchResultListVo = new NaverMapLocalResearchResultListVo();
+	    List<NaverMapLocalResearchResultListVo> naverMapLocalResearchResultList = new ArrayList<NaverMapLocalResearchResultListVo>();
+	    
+	    for(NaverMapAddressResearchResultListVo naverMapAddressResearchResultListVo : naverMapAddressResearchResultVo.getAddresses()) {
+	    	naverMapLocalResearchResultListVo.setTitle(naverMapAddressResearchResultListVo.getRoadAddress());
+	    	naverMapLocalResearchResultListVo.setAddress(naverMapAddressResearchResultListVo.getJibunAddress());
+	    	naverMapLocalResearchResultListVo.setMapx(naverMapAddressResearchResultListVo.getX());
+	    	naverMapLocalResearchResultListVo.setMapy(naverMapAddressResearchResultListVo.getY());
+	    	naverMapLocalResearchResultListVo.setReturnType("address");
+	    	
+	    	naverMapLocalResearchResultList.add(naverMapLocalResearchResultListVo);
+	    }
+	    
+	    naverMapLocalResearchResultVo.setItems(naverMapLocalResearchResultList);
+	    
 		try {
-			resultJsonData = mapper.writeValueAsString(response.getBody());
+			resultJsonData = mapper.writeValueAsString(naverMapLocalResearchResultVo);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			logger.error("[CctvMapDataResearchServiceImpl] [getAddressListByNaverMapDataJson] [Try Catch resultJsonData] [Exception] ====> {}", e);
 		}
-		
-		return resultJsonData;
+			
+			return resultJsonData;
 	}
 	
 	@Override
 	public String getCctvListByCoordinateLocalMapDataJson(CctvCoordinateMapListResearchVo cctvMapListResearchVo) {
 		
 		logger.info("[CctvMapDataResearchServiceImpl] [getCctvListByLocalMapDataJson] Start ~!!!! ");
-		
 		
 		logger.info("[CctvMapDataResearchServiceImpl] [getCctvListByLocalMapDataJson] [cctvMapListResearchVo] : {} ", cctvMapListResearchVo);
 		
