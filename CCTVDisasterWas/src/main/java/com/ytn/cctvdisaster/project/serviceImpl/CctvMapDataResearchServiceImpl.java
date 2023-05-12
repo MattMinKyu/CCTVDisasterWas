@@ -142,7 +142,7 @@ public class CctvMapDataResearchServiceImpl implements CctvMapDataResearchServic
 	    
 	    for(NaverMapAddressResearchResultListVo naverMapAddressResearchResultListVo : naverMapAddressResearchResultVo.getAddresses()) {
 	    	naverMapLocalResearchResultListVo.setTitle(naverMapAddressResearchResultListVo.getRoadAddress());
-	    	naverMapLocalResearchResultListVo.setAddress(naverMapAddressResearchResultListVo.getJibunAddress());
+	    	naverMapLocalResearchResultListVo.setRoadAddress(naverMapAddressResearchResultListVo.getJibunAddress());
 	    	naverMapLocalResearchResultListVo.setMapx(naverMapAddressResearchResultListVo.getX());
 	    	naverMapLocalResearchResultListVo.setMapy(naverMapAddressResearchResultListVo.getY());
 	    	naverMapLocalResearchResultListVo.setReturnType("address");
