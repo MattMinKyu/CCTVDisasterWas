@@ -9,8 +9,8 @@
     <property name="LOG_PATH" value="C:/Temp"/>
      -->
     <!-- prod -->
-    <property name="LOG_DIR" value="/ytncctvdisaster/prod/logs" />
-    <property name="LOG_PATH" value="/ytncctvdisaster/prod"/>
+    <property name="LOG_DIR" value="/ytncctvdisaster/dev/logs" />
+    <property name="LOG_PATH" value="/ytncctvdisaster/dev"/>
     <!-- <property name="LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{36} - %msg%n"/>  -->
     <!-- <property name="LOG_PATTERN" value="[%-5level] %d{HH:mm:ss.SSS, ${logback.timezone:-Asia/Seoul}} %logger{36} %M - %msg%n"/> -->
     <property name="LOG_PATTERN" value="[%d{yyyy-MM-dd HH:mm:ss, ${logback.timezone:-Asia/Seoul}}:%-3relative][%thread] %green(%-5level) %cyan(%logger{36}) - %msg%n"/>

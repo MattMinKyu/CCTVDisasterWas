@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ytn.cctvdisaster.project.dao.CctvWebSiteInfoDataDao">
+	
+	<select id="selectCctvWebSiteDataList" resultType="com.ytn.cctvdisaster.project.dto.CctvWebSiteInfoDataDto">
+ 		SELECT ROWNUM AS idx, 공통코드명 AS websiteName, 기타정보 AS link FROM YTNDI.공통코드
+		WHERE 그룹코드 = 'W0008'
+		AND 순번 = 1
+		ORDER BY 공통코드 ASC
+	</select>
+	
+</mapper>

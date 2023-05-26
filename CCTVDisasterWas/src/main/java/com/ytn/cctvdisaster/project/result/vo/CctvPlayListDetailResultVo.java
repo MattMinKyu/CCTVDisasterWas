@@ -20,6 +20,11 @@ public class CctvPlayListDetailResultVo {
 	private String plistId;
 	
 	/**
+	 * idx
+	 */
+	private String idx;
+	
+	/**
 	 * plistNo
 	 */
 	private int plistNo;

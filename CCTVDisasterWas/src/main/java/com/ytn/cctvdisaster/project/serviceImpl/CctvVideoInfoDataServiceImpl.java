@@ -2,7 +2,6 @@ package com.ytn.cctvdisaster.project.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -254,7 +253,6 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 					}
 				}
 				continue;
-				
 			}else if(cctvInfoThumbnailUrlResultVo.getSrcGb().equals("K")) {
 				if(ktictCctvStatusResultVoList.size() > 0) {
 					for(KtictCctvStatusResultVo ktictCctvStatusResultVo:ktictCctvStatusResultVoList) {

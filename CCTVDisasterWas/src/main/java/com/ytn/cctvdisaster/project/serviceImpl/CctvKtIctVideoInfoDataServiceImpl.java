@@ -167,8 +167,6 @@ public class CctvKtIctVideoInfoDataServiceImpl implements CctvKtIctVideoInfoData
 	                .build()
 	                .toUri();
 		
-		logger.info("[CctvKtIctVideoInfoDataServiceImpl] [getCctvStreamingDataListByKtIctDataJson] uri : {}", uri);
-		
 	    // header �� �߰� get���� ��û�ϱ� ������ Void�� �޴´�.
 	    RequestEntity<Void> req = RequestEntity
 	            .get(uri)
@@ -178,7 +176,8 @@ public class CctvKtIctVideoInfoDataServiceImpl implements CctvKtIctVideoInfoData
 	    	ResponseEntity<String> response = restTemplate.exchange(req, String.class);
 		    resultJsonData = response.getBody();
 	    }catch (Exception e) {
-	    	//e.printStackTrace();
+	    	e.printStackTrace();
+	    	logger.error("[CctvKtIctVideoInfoDataServiceImpl] [getCctvStreamingDateByKtIctJson] [Try Catch ktict api error] [Exception] ====> {}", e);
 			logger.error("[CctvKtIctVideoInfoDataServiceImpl] [getCctvStreamingDateByKtIctJson] [Try Catch ktict api error] [cctvIdParam] ====> {}", cctvIdParam);
 		}
 	    

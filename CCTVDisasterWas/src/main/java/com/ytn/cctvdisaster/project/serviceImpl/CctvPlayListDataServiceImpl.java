@@ -148,8 +148,10 @@ public class CctvPlayListDataServiceImpl implements CctvPlayListDataService{
 		
 		StringBuilder cctvIdStrBuild = new StringBuilder();
 		
+		int index = 1;
 		for(PlistDtlJoinCctvInfoDto plistDtlJoinCctvInfoDto : PlistDtlJoinCctvInfoList) {
 			CctvPlayListDetailResultVo cctvPlayListDetailResultVo = new CctvPlayListDetailResultVo();
+			
 			cctvPlayListDetailResultVo.setPlistId(plistId);
 			cctvPlayListDetailResultVo.setPlistNo(plistDtlJoinCctvInfoDto.getPlist_no());
 			cctvPlayListDetailResultVo.setCctvId(plistDtlJoinCctvInfoDto.getCctv_id());
@@ -161,6 +163,8 @@ public class CctvPlayListDataServiceImpl implements CctvPlayListDataService{
 			cctvPlayListDetailResultVo.setUpdYmd(plistDtlJoinCctvInfoDto.getUpd_ymd());
 			cctvPlayListDetailResultVo.setUpdTime(plistDtlJoinCctvInfoDto.getUpd_time());
 			cctvPlayListDetailResultVo.setSrcGb(plistDtlJoinCctvInfoDto.getSrc_gb());
+			cctvPlayListDetailResultVo.setIdx(plistId+index);
+			index++;
 			
 			if(plistDtlJoinCctvInfoDto.getSrc_gb().equals("K")) {
 				cctvIdStrBuild.append(plistDtlJoinCctvInfoDto.getCctv_id()+",");
