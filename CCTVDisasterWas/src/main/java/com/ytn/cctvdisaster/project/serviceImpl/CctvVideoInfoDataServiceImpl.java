@@ -240,6 +240,7 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 		 **/
 		for(CctvInfoThumbnailUrlResultVo cctvInfoThumbnailUrlResultVo : cctvInfoThumbnailUrlResultVoList) {
 			if(cctvInfoThumbnailUrlResultVo.getSrcGb().equals("Y")) {
+				
 				if(!StringUtils.isEmpty(cctvInfoThumbnailUrlResultVo.getStreamingUrl())) {
 					String thumbnailCreateResult = "";
 					

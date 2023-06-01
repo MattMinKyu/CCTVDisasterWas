@@ -263,8 +263,12 @@ public class CctvPlayListDataServiceImpl implements CctvPlayListDataService{
 			logger.error("[CctvPlayListDataServiceImpl] [modifyCctvPlayListDetailDataJson] [Try Catch Delete Data] [plistId] ====> {}", plistId);
 		}
 		
-		int idx = 1;
+		if(cctvPlayListDetailDataVo.getItems().size() == 1
+				&& cctvPlayListDetailDataVo.getItems().get(0).getCctvId() == null) {
+			return 1;
+		}
 		
+		int idx = 1;
 		for(CctvPlayListDetailDataListVo cctvPlayListDetailDataListVo : cctvPlayListDetailDataVo.getItems()) {
 			String cctvId = cctvPlayListDetailDataListVo.getCctvId();
 			
@@ -295,7 +299,6 @@ public class CctvPlayListDataServiceImpl implements CctvPlayListDataService{
 				logger.error("[CctvPlayListDataServiceImpl] [modifyCctvPlayListDetailDataJson] [Try Catch INSERT Data] [cctvId] ====> {}", cctvId);
 			}
 		}
-		
 		
 		return resultCnt;
 	}

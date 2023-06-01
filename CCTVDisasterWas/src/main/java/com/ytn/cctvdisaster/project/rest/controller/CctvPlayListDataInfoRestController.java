@@ -133,7 +133,7 @@ private static final Logger logger = LoggerFactory.getLogger(CctvPlayListDataInf
 		
 		int resultCnt=0;
 		
-		if(cctvPlayListDetailDataVo == null || cctvPlayListDetailDataVo.getItems().size() == 0) {
+		if(cctvPlayListDetailDataVo == null) {
 			return resultCnt;
 		}
 		
