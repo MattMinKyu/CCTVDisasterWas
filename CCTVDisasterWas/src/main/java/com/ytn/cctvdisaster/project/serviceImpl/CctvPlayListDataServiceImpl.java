@@ -176,14 +176,17 @@ public class CctvPlayListDataServiceImpl implements CctvPlayListDataService{
 			cctvPlayListDetailResultVoList.add(cctvPlayListDetailResultVo);
 		}
 		
+		/*
 		// CCTV STATUS Get
 		List<KtictCctvStatusResultVo> ktictCctvStatusResultVoList = new ArrayList<KtictCctvStatusResultVo>();
+		
 		
 		if(cctvIdStrBuild.length() > 0) {
 			String cctvIdAllStr = cctvIdStrBuild.toString().substring(0, cctvIdStrBuild.toString().length()-1);
 			
 			ktictCctvStatusResultVoList = cctvKtIctVideoInfoDataService.getCctvStatusInfoListByKtIctDataJson(cctvIdAllStr);
 		}
+		*/
 		
 		/**
 		 * TODO DB 연동 해서 분기하기
@@ -196,7 +199,8 @@ public class CctvPlayListDataServiceImpl implements CctvPlayListDataService{
 			if(!cctvPlayListDetailResultVo.getSrcGb().equals("K")) {
 				break;
 			}
-				
+			
+			/*
 			if(ktictCctvStatusResultVoList.size() > 0) {
 				for(KtictCctvStatusResultVo ktictCctvStatusResultVo:ktictCctvStatusResultVoList) {
 					if(cctvPlayListDetailResultVo.getCctvId().equals(ktictCctvStatusResultVo.getCctvId())) {
@@ -225,6 +229,22 @@ public class CctvPlayListDataServiceImpl implements CctvPlayListDataService{
 					}
 				}
 			}
+			*/
+			
+			String returnStream = "";
+			
+			// Streaming Url
+			returnStream = cctvKtIctVideoInfoDataService.getCctvStreamingDateByKtIctJson(cctvPlayListDetailResultVo.getCctvId());
+			
+			if(!StringUtils.isEmpty(returnStream)) {
+				cctvPlayListDetailResultVo.setServiceYn("Y");
+				cctvPlayListDetailResultVo.setStreamingUrl(returnStream);
+			}else {
+				cctvPlayListDetailResultVo.setServiceYn("N");
+			}
+			
+			
+			
 		}
 		
 		try {

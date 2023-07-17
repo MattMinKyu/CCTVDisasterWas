@@ -96,6 +96,7 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 		}
 		
 		
+		/*
 		// CCTV STATUS Get
 		List<KtictCctvStatusResultVo> ktictCctvStatusResultVoList = new ArrayList<KtictCctvStatusResultVo>();
 		
@@ -104,6 +105,7 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 			
 			ktictCctvStatusResultVoList = cctvKtIctVideoInfoDataService.getCctvStatusInfoListByKtIctDataJson(cctvIdAllStr);
 		}
+		*/
 		
 		/**
 		 * TODO DB 연동 해서 분기하기
@@ -116,7 +118,8 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 			if(!cctvInfoStreamingUrlResultVo.getSrcGb().equals("K")) {
 				break;
 			}
-				
+			
+			/*
 			if(ktictCctvStatusResultVoList.size() > 0) {
 				for(KtictCctvStatusResultVo ktictCctvStatusResultVo:ktictCctvStatusResultVoList) {
 					if(cctvInfoStreamingUrlResultVo.getCctvId().equals(ktictCctvStatusResultVo.getCctvId())) {
@@ -145,6 +148,25 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 					}
 				}
 			}
+			*/
+			
+			String returnStream = "";
+			
+			// Streaming Url
+			returnStream = cctvKtIctVideoInfoDataService.getCctvStreamingDateByKtIctJson(cctvInfoStreamingUrlResultVo.getCctvId());
+			
+			if(!StringUtils.isEmpty(returnStream)) {
+				if(returnStream.indexOf("error") != -1) {
+					cctvInfoStreamingUrlResultVo.setServiceYn("N");
+				}else {
+					cctvInfoStreamingUrlResultVo.setServiceYn("Y");
+					cctvInfoStreamingUrlResultVo.setStreamingUrl(returnStream);
+				}
+				
+			}else {
+				cctvInfoStreamingUrlResultVo.setServiceYn("N");
+			}
+			
 		}
 		
 		try {
@@ -174,6 +196,7 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 		ObjectMapper mapper = new ObjectMapper();
 		
 		for(int i=0; i<cctvIdList.size(); i++) {
+			
 			if(cctvIdListStrBuilder.indexOf(cctvIdList.get(i)) >= 0) {
 				overlapCctvIdMap.put(i, cctvIdList.get(i));
 			}else {
@@ -222,6 +245,7 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 			cctvInfoThumbnailUrlResultVoList.add(cctvInfoThumbnailUrlResultVo);
 		}
 		
+		/*
 		// CCTV STATUS Get
 		List<KtictCctvStatusResultVo> ktictCctvStatusResultVoList = new ArrayList<KtictCctvStatusResultVo>();
 		
@@ -230,6 +254,8 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 			
 			ktictCctvStatusResultVoList = cctvKtIctVideoInfoDataService.getCctvStatusInfoListByKtIctDataJson(cctvIdAllStr);
 		}
+		*/
+		
 		
 		/**
 		 * TODO DB 연동 해서 분기하기
@@ -255,6 +281,7 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 				}
 				continue;
 			}else if(cctvInfoThumbnailUrlResultVo.getSrcGb().equals("K")) {
+				/*
 				if(ktictCctvStatusResultVoList.size() > 0) {
 					for(KtictCctvStatusResultVo ktictCctvStatusResultVo:ktictCctvStatusResultVoList) {
 						if(cctvInfoThumbnailUrlResultVo.getCctvId().equals(ktictCctvStatusResultVo.getCctvId())) {
@@ -281,8 +308,23 @@ public class CctvVideoInfoDataServiceImpl implements CctvVideoInfoDataService{
 						}
 					}
 				}
+				*/
+				
+				String returnThumbnailUrl = "";
+				
+				// Thumbnail Url
+				returnThumbnailUrl = cctvKtIctVideoInfoDataService.getCctvThumbnailMakeUrlByKtIct(cctvInfoThumbnailUrlResultVo.getCctvId());
+				
+				if(!StringUtils.isEmpty(returnThumbnailUrl)) {
+					cctvInfoThumbnailUrlResultVo.setServiceYn("Y");
+					cctvInfoThumbnailUrlResultVo.setThumbnailUrl(returnThumbnailUrl);
+				}else {
+					cctvInfoThumbnailUrlResultVo.setServiceYn("N");
+				}
+				
 			}
 		}
+		
 		
 		/**
 		 * 중복 cctvId 데이터, 제자리에 밀어넣기.
