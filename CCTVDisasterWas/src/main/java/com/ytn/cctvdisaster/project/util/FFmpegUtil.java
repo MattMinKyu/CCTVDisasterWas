@@ -67,7 +67,7 @@ public class FFmpegUtil {
 			FFprobe ffprobe = new FFprobe(ffmpegProbeExecPath);	// ffprobe.exe 파일 경로
 			
 			//FFmpegBuilder를 통해 FFmpeg 명령어를 만들 수 있음
-			FFmpegBuilder builder = new FFmpegBuilder()	
+			FFmpegBuilder builder = new FFmpegBuilder()	 
 					.overrideOutputFiles(true)					// output 파일을 덮어쓸 것인지 여부(false일 경우, output path에 해당 파일이 존재할 경우 예외 발생 - File 'C:/Users/Desktop/test.png' already exists. Exiting.)
 		            .setInput(inputFilePath)     					// 썸네일 이미지 추출에 사용할 영상 파일의 절대 경로
 		            .addExtraArgs("-timeout", "5000")
